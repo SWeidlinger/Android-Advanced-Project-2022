@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Android-Advanced-Project-2022</string>
+    <string name="add_new_item">Add a new item to your wallet</string>
+    <string name="add_new_card">Add a new card to your wallet</string>
+    <string name="add_new_ticket">Add a new ticket to your wallet</string>
+    <string name="add_new_invoice">Add a new invoice to your wallet</string>
 </resources>
