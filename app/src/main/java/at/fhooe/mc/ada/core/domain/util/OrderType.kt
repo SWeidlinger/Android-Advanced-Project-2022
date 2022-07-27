@@ -1,4 +1,4 @@
-package at.fhooe.mc.ada.features.feature_card.domain.util
+package at.fhooe.mc.ada.core.domain.util
 
 sealed class OrderType{
     object Ascending: OrderType()

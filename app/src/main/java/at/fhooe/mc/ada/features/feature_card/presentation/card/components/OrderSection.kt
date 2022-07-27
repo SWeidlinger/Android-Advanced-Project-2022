@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import at.fhooe.mc.ada.features.feature_card.domain.util.CardOrder
-import at.fhooe.mc.ada.features.feature_card.domain.util.OrderType
+import at.fhooe.mc.ada.core.domain.util.OrderType
 
 @Composable
 fun OrderSection(
@@ -22,9 +22,9 @@ fun OrderSection(
             )
             Spacer(modifier = Modifier.padding(5.dp))
             DefaultFilterChip(
-                text = "Current balance",
-                selected = cardOrder is CardOrder.CurrentBalance,
-                onSelect = { onOrderChange(CardOrder.CurrentBalance(cardOrder.orderType)) }
+                text = "Card holder name",
+                selected = cardOrder is CardOrder.CardHolderName,
+                onSelect = { onOrderChange(CardOrder.CardHolderName(cardOrder.orderType)) }
             )
             Spacer(modifier = Modifier.padding(5.dp))
             DefaultFilterChip(

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.fhooe.mc.ada.features.feature_card.domain.use_case.CardUseCases
 import at.fhooe.mc.ada.features.feature_card.domain.util.CardOrder
-import at.fhooe.mc.ada.features.feature_card.domain.util.OrderType
+import at.fhooe.mc.ada.core.domain.util.OrderType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn

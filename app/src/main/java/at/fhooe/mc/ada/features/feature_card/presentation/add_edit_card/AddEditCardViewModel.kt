@@ -2,6 +2,8 @@ package at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,19 +26,28 @@ class AddEditCardViewModel @Inject constructor(
     private val _cardName = mutableStateOf("")
     val cardName: State<String> = _cardName
 
-    private val _cardCurrentBalance = mutableStateOf(0.0)
-    val cardCurrentBalance: State<Double> = _cardCurrentBalance
+    private val _cardHolderName = mutableStateOf("")
+    val cardHolderName: State<String> = _cardHolderName
+
+    private val _cardNumber = mutableStateOf(-100L)
+    val cardNumber: State<Long> = _cardNumber
+
+    private val _cardSecurityNumber = mutableStateOf(-100)
+    val cardSecurityNumber: State<Int> = _cardSecurityNumber
+
+    private val _cardExpirationDate = mutableStateOf(-100)
+    val cardExpirationDate: State<Int> = _cardExpirationDate
 
     private val _cardIsLocked = mutableStateOf(false)
     val cardIsLocked: State<Boolean> = _cardIsLocked
 
-    private val _cardImage = mutableStateOf(R.drawable.test_card)
-    val cardImage: State<Int> = _cardImage
+    private val _cardStyle = mutableStateOf(Card.cardStyles[0].toArgb())
+    val cardStyle: State<Int> = _cardStyle
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private var currentCardId: Int? = null
+    var currentCardId: Int? = null
 
     init {
         savedStateHandle.get<Int>("cardId")?.let { cardId ->
@@ -45,9 +56,13 @@ class AddEditCardViewModel @Inject constructor(
                     cardUseCases.getCard(cardId)?.also { card ->
                         currentCardId = card.id
                         _cardName.value = card.cardName
-                        _cardCurrentBalance.value = card.currentBalance ?: 0.00
-                        _cardImage.value = card.image ?: R.drawable.test_card
+                        _cardHolderName.value = card.cardHolderName
+                        _cardStyle.value = card.cardStyle
                         _cardIsLocked.value = card.isLocked
+                        _cardNumber.value = card.cardNumber
+                        _cardHolderName.value = card.cardHolderName
+                        _cardSecurityNumber.value = card.securityNumber
+                        _cardExpirationDate.value = card.expirationDate
                     }
                 }
             }
@@ -59,14 +74,23 @@ class AddEditCardViewModel @Inject constructor(
             is AddEditCardEvent.EnteredCardName -> {
                 _cardName.value = event.cardName
             }
-            is AddEditCardEvent.EnteredCurrentBalance -> {
-                _cardCurrentBalance.value = event.currentBalance
+            is AddEditCardEvent.EnteredCardHolderName -> {
+                _cardHolderName.value = event.cardHolderName
             }
             is AddEditCardEvent.ChangeIsLocked -> {
                 _cardIsLocked.value = event.isLocked
             }
-            is AddEditCardEvent.ChangeImage -> {
-                _cardImage.value = event.image
+            is AddEditCardEvent.ChangeCardStyle -> {
+                _cardStyle.value = event.style
+            }
+            is AddEditCardEvent.EnteredCardNumber -> {
+                _cardNumber.value = event.cardNumber
+            }
+            is AddEditCardEvent.EnteredExpirationDate -> {
+                _cardExpirationDate.value = event.expirationDate
+            }
+            is AddEditCardEvent.EnteredSecurityNumber -> {
+                _cardSecurityNumber.value = event.securityNumber
             }
             is AddEditCardEvent.SaveCard -> {
                 viewModelScope.launch {
@@ -74,11 +98,14 @@ class AddEditCardViewModel @Inject constructor(
                         cardUseCases.addCard(
                             Card(
                                 cardName = cardName.value,
-                                currentBalance = cardCurrentBalance.value,
+                                cardHolderName = cardHolderName.value,
                                 isLocked = cardIsLocked.value,
-                                image = cardImage.value,
+                                cardStyle = cardStyle.value,
                                 dateAdded = System.currentTimeMillis(),
-                                id = currentCardId
+                                id = currentCardId,
+                                cardNumber = cardNumber.value,
+                                securityNumber = cardSecurityNumber.value,
+                                expirationDate = cardExpirationDate.value
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveCard)

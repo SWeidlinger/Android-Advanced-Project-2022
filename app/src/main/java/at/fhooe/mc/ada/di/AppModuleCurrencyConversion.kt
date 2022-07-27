@@ -17,7 +17,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object AppModuleCurrencyConversion {
 
     @Singleton
     @Provides
@@ -42,6 +42,5 @@ object AppModule {
             get() = Dispatchers.Default
         override val unconfined: CoroutineDispatcher
             get() = Dispatchers.Unconfined
-
     }
 }

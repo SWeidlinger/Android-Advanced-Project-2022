@@ -1,7 +1,6 @@
 package at.fhooe.mc.ada.core.presentation
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -9,10 +8,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import at.fhooe.mc.ada.features.feature_currencyConversion.domain.MainViewModel
-import at.fhooe.mc.ada.ui.bottomNavigation.screens.CurrencyConverterScreen
+import at.fhooe.mc.ada.features.feature_currencyConversion.presentation.CurrencyConverterScreen
 import at.fhooe.mc.ada.features.feature_card.presentation.HomeScreen
 import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.AddEditCardScreen
-import at.fhooe.mc.ada.ui.bottomNavigation.screens.ReceiptScreen
+import at.fhooe.mc.ada.features.feature_budget_tracker.presentation.BudgetTrackerScreen
+import at.fhooe.mc.ada.features.feature_budget_tracker.presentation.add_edit_budget_record.AddEditBudgetRecordScreen
 
 @Composable
 fun BottomNavGraph(
@@ -24,11 +24,11 @@ fun BottomNavGraph(
         navController = navController,
         startDestination = BottomBarScreen.Home.route
     ) {
-        composable(route = BottomBarScreen.Receipts.route) {
-            ReceiptScreen(BottomBarScreen.Receipts.title, navController, paddingValues)
+        composable(route = BottomBarScreen.BudgetTracker.route) {
+            BudgetTrackerScreen(BottomBarScreen.BudgetTracker.title, navController, paddingValues)
         }
         composable(route = BottomBarScreen.Home.route) {
-            HomeScreen(navController, paddingValues)
+            HomeScreen(BottomBarScreen.Home.title, navController, paddingValues)
         }
         composable(route = BottomBarScreen.CurrencyConverter.route) {
             CurrencyConverterScreen(
@@ -46,6 +46,16 @@ fun BottomNavGraph(
             })
         ) {
             AddEditCardScreen(navHostController = navController)
+        }
+
+        composable(
+            route = Screen.AddEditBudgetRecordScreen.route + "?budgetRecordId={budgetRecordId}",
+            arguments = listOf(navArgument(name = "budgetRecordId") {
+                type = NavType.IntType
+                defaultValue = -1
+            })
+        ) {
+            AddEditBudgetRecordScreen(navHostController = navController)
         }
     }
 }

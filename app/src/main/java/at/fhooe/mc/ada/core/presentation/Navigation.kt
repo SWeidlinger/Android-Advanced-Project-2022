@@ -1,9 +1,7 @@
 package at.fhooe.mc.ada.core.presentation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomBarScreen(
@@ -12,24 +10,25 @@ sealed class BottomBarScreen(
     val icon: ImageVector
 ) {
     object Home : BottomBarScreen(
-        route = "home",
+        route = "cards",
         title = "Cards",
-        icon = Icons.Default.Home
+        icon = Icons.Default.CreditCard
     )
 
-    object Receipts : BottomBarScreen(
-        route = "receipts",
-        title = "Receipts",
-        icon = Icons.Default.List
+    object BudgetTracker : BottomBarScreen(
+        route = "budgetTracker",
+        title = "Budget",
+        icon = Icons.Default.Payments
     )
 
     object CurrencyConverter : BottomBarScreen(
         route = "currencyConverter",
         title = "Currency",
-        icon = Icons.Default.Info
+        icon = Icons.Default.CurrencyExchange
     )
 }
 
 sealed class Screen(val route: String) {
     object AddEditCardScreen : Screen("add_edit_card_screen")
+    object AddEditBudgetRecordScreen : Screen("add_edit_budget_record_screen")
 }

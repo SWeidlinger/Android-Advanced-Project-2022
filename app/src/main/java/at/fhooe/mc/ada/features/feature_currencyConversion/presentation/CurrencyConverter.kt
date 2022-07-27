@@ -1,20 +1,27 @@
-package at.fhooe.mc.ada.ui.bottomNavigation.screens
+package at.fhooe.mc.ada.features.feature_currencyConversion.presentation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -28,7 +35,7 @@ import androidx.navigation.NavHostController
 import at.fhooe.mc.ada.features.feature_currencyConversion.domain.CurrencyWithRate
 import at.fhooe.mc.ada.features.feature_currencyConversion.domain.MainViewModel
 import at.fhooe.mc.ada.features.feature_currencyConversion.data.CurrencyAndCountry
-import at.fhooe.mc.ada.ui.BottomBar
+import at.fhooe.mc.ada.features.BottomBar
 import at.fhooe.mc.ada.features.feature_currencyConversion.data.Constants
 import kotlinx.coroutines.launch
 import kotlin.math.round
@@ -63,7 +70,9 @@ fun CurrencyConverterScreen(
 
     var isFrom = true
     val scope = rememberCoroutineScope()
-    val scaffoldState = rememberBottomSheetScaffoldState()
+    val scaffoldStateBottomSheet = rememberBottomSheetScaffoldState()
+
+    val scaffoldState = rememberScaffoldState()
 
     var bottomSheetExpanded by remember {
         mutableStateOf(false)
@@ -94,20 +103,29 @@ fun CurrencyConverterScreen(
 
     BottomSheetScaffold(
         modifier = Modifier,
-        scaffoldState = scaffoldState,
+        scaffoldState = scaffoldStateBottomSheet,
         sheetShape = RoundedCornerShape(20.dp, 20.dp),
         sheetElevation = 5.dp,
         sheetBackgroundColor = Color.LightGray,
         sheetGesturesEnabled = false,
         sheetPeekHeight = 0.dp,
         sheetContent = {
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.7f)
+                    .fillMaxHeight(0.68f), horizontalAlignment = Alignment.Start
             ) {
+                IconButton(
+                    onClick = { scope.launch { scaffoldStateBottomSheet.bottomSheetState.collapse() } },
+                    modifier = Modifier.scale(0.9f)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close bottom sheet", modifier = Modifier.scale(1.4f)
+                    )
+                }
                 LazyColumn(modifier = Modifier
-                    .padding(10.dp)
+                    .padding(10.dp, 0.dp, 10.dp, 0.dp)
                     .fillMaxSize(),
                     contentPadding = PaddingValues(10.dp),
                     state = currencyListState,
@@ -120,7 +138,7 @@ fun CurrencyConverterScreen(
                                     toCurrencyCode = item.currencyCode
                                 }
                                 scope.launch {
-                                    scaffoldState.bottomSheetState.collapse()
+                                    scaffoldStateBottomSheet.bottomSheetState.collapse()
                                     bottomSheetExpanded = false
                                     //used so the beginning of the list is shown always
                                     currencyListState.scrollToItem(0)
@@ -132,166 +150,182 @@ fun CurrencyConverterScreen(
             }
         },
     ) {
-        Scaffold(floatingActionButton = {
+        androidx.compose.material.Scaffold(floatingActionButton = {
             ExtendedFloatingActionButton(onClick = {
                 val currentItem =
                     Constants.CURRENCY_CODES_LIST.find { it.currencyCode == toCurrencyCode }
-                viewModel.convert(
-                    amountValue.text,
-                    fromCurrencyCode,
-                    toCurrencyCode,
-                    currentItem?.currencySymbol
-                )
+                if (fromCurrencyCode != "-" && toCurrencyCode != "-") {
+                    viewModel.convert(
+                        amountValue.text,
+                        fromCurrencyCode,
+                        toCurrencyCode,
+                        currentItem?.currencySymbol
+                    )
+                } else {
+                    scope.launch {
+                        scaffoldState.snackbarHostState.showSnackbar("Please specify FROM and TO currency")
+                    }
+                }
             }) {
+                Icon(
+                    imageVector = Icons.Default.Cached,
+                    contentDescription = "Convert Currency"
+                )
+                Spacer(modifier = Modifier.padding(end = 5.dp))
                 Text(text = "Convert")
             }
         },
             topBar = {
                 SmallTopAppBar(title = { Text(text = title) })
-            }, bottomBar = {
+            },
+            bottomBar = {
                 BottomBar(navHostController = navController)
-            }, content = {
+            },
+            scaffoldState = scaffoldState,
+            backgroundColor = MaterialTheme.colorScheme.background,
+            content = {
                 Column(
                     Modifier
                         .fillMaxSize()
                         .padding(it), horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(10.dp, 1.dp, 10.dp, 5.dp)
-                            .fillMaxWidth()
-                            .height(80.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.Top,
-                    ) {
+                    Column(modifier = Modifier.fillMaxHeight(0.27f)) {
                         Row(
-                            Modifier
-                                .fillMaxSize(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Card(
-                                colors = CardDefaults.cardColors(Color.Transparent),
-                                elevation = CardDefaults.cardElevation(5.dp)
-                            ) {
-                                TextField(
-                                    value = amountValue,
-                                    label = { Text(text = "Amount", textAlign = TextAlign.Center) },
-                                    singleLine = true,
-                                    onValueChange = { newValue ->
-                                        amountValue = newValue
-                                    },
-                                    modifier = Modifier
-                                        .fillMaxWidth(0.5f),
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    textStyle = TextStyle(
-                                        textAlign = TextAlign.Center,
-                                        fontSize = 20.sp
-                                    ),
-                                    shape = RoundedCornerShape(10.dp),
-                                    colors = TextFieldDefaults.textFieldColors(
-                                        focusedIndicatorColor = Color.Transparent,
-                                        unfocusedIndicatorColor = Color.Transparent
-                                    )
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.padding(5.dp))
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceAround,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .fillMaxHeight()
-                                    .padding(0.dp, 9.dp, 0.dp, 10.dp),
-                            ) {
-                                CurrencyCard(
-                                    currencyCode = fromCurrencyCode,
-                                    label = "from",
-                                    modifier = Modifier
-                                        .fillMaxWidth(0.5f)
-                                        .fillMaxHeight(),
-                                    onCurrencyCardClick = {
-                                        scope.launch {
-                                            isFrom = true
-                                            bottomSheetExpanded = true
-                                            scaffoldState.bottomSheetState.expand()
-                                        }
-                                    })
-                                Spacer(modifier = Modifier.padding(5.dp))
-                                CurrencyCard(
-                                    currencyCode = toCurrencyCode, label = "to", modifier = Modifier
-                                        .fillMaxWidth()
-                                        .fillMaxHeight(), onCurrencyCardClick = {
-                                        scope.launch {
-                                            isFrom = false
-                                            bottomSheetExpanded = true
-                                            scaffoldState.bottomSheetState.expand()
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                    }
-                    Card(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(10.dp, 0.dp, 10.dp, 0.dp)
-                            .height(75.dp),
-                        border = BorderStroke(1.dp, Color.Black),
-                        elevation = CardDefaults.cardElevation(0.dp),
-                        colors = CardDefaults.cardColors(Color.Transparent)
-                    ) {
-                        Column(
                             modifier = Modifier
-                                .fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
+                                .padding(10.dp, 1.dp, 10.dp, 5.dp)
+                                .fillMaxWidth()
+                                .fillMaxHeight(0.5f),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.Top,
                         ) {
                             Row(
                                 Modifier
-                                    .fillMaxWidth()
-                                    .padding(15.dp, 7.dp, 15.dp, 0.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(
-                                    text = "Converted amount",
-                                    textAlign = TextAlign.Center,
-                                    fontSize = 12.sp
-                                )
-                                Text(
-                                    text = "$fromCurrencyCode - $toCurrencyCode",
-                                    textAlign = TextAlign.Center,
-                                    fontSize = 12.sp
-                                )
-                            }
-                            Text(
-                                text = resultValue,
-                                modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(10.dp, 0.dp, 10.dp, 5.dp)
-                                    .offset(0.dp, (-5).dp),
-                                textAlign = TextAlign.Center,
-                                fontSize = 40.sp,
-                                maxLines = 1,
-                                fontWeight = FontWeight.Bold, overflow = TextOverflow.Ellipsis
-                            )
+                                    .padding(bottom = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .fillMaxWidth(0.5f)
+                                ) {
+                                    CurrencyCardTextField(
+                                        label = "Amount",
+                                        modifier = Modifier.fillMaxSize(),
+                                        textFieldValue = amountValue,
+                                        onValueChange = { newValue ->
+                                            amountValue = newValue
+                                        }
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.padding(5.dp))
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceAround,
+                                    modifier = Modifier
+                                        .fillMaxSize(),
+                                ) {
+                                    CurrencyCard(
+                                        currencyCode = fromCurrencyCode,
+                                        label = "from",
+                                        modifier = Modifier
+                                            .fillMaxWidth(0.5f)
+                                            .fillMaxHeight(),
+                                        onCurrencyCardClick = {
+                                            scope.launch {
+                                                isFrom = true
+                                                bottomSheetExpanded = true
+                                                scaffoldStateBottomSheet.bottomSheetState.expand()
+                                            }
+                                        })
+                                    Spacer(modifier = Modifier.padding(5.dp))
+                                    CurrencyCard(
+                                        currencyCode = toCurrencyCode,
+                                        label = "to",
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .fillMaxHeight(),
+                                        onCurrencyCardClick = {
+                                            scope.launch {
+                                                isFrom = false
+                                                bottomSheetExpanded = true
+                                                scaffoldStateBottomSheet.bottomSheetState.expand()
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                        Card(
+                            Modifier
+                                .fillMaxSize()
+                                .padding(10.dp, 0.dp, 10.dp, 0.dp),
+                            border = BorderStroke(1.dp, Color.Black),
+                            elevation = CardDefaults.cardElevation(0.dp),
+                            colors = CardDefaults.cardColors(Color.Transparent)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Row(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(15.dp, 7.dp, 15.dp, 0.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = "Converted amount",
+                                        textAlign = TextAlign.Center,
+                                        fontSize = 12.sp
+                                    )
+                                    Text(
+                                        text = "$fromCurrencyCode - $toCurrencyCode",
+                                        textAlign = TextAlign.Center,
+                                        fontSize = 12.sp
+                                    )
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(15.dp, 5.dp, 15.dp, 10.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = resultValue,
+                                        fontSize = 40.sp,
+                                        maxLines = 1,
+                                        fontWeight = FontWeight.Bold,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                            }
                         }
                     }
                     Card(
-                        modifier = Modifier.padding(10.dp, 15.dp, 10.dp, 10.dp),
-                        colors = CardDefaults.cardColors(Color.LightGray)
+                        modifier = Modifier.padding(10.dp, 15.dp, 10.dp, 0.dp),
+                        shape = RoundedCornerShape(10.dp, 10.dp, 0.dp, 0.dp),
+                        colors = CardDefaults.cardColors(Color.Transparent)
                     ) {
                         LazyColumn(content = {
-                            items(Constants.CURRENCY_CODES_LIST) { item ->
+                            itemsIndexed(Constants.CURRENCY_CODES_LIST) { index, item: CurrencyAndCountry ->
                                 var amountFromTextField = 0.00
                                 if (amountValue.text.isNotEmpty() && !amountValue.text.toDouble()
                                         .isNaN()
                                 ) {
                                     amountFromTextField = amountValue.text.toDouble()
                                 }
-                                CurrencyListItem(item, currencyList, amountFromTextField)
+                                if (resultValue != "-") {
+                                    CurrencyListItem(item, currencyList, amountFromTextField)
+                                }
                                 Spacer(modifier = Modifier.padding(5.dp))
+                                if (index + 1 == Constants.CURRENCY_CODES_LIST.size) {
+                                    Spacer(modifier = Modifier.padding(35.dp))
+                                }
                             }
                         })
                     }
@@ -315,24 +349,81 @@ fun CurrencyCard(
         content = {
             Column(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = label,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(15.dp, 0.dp, 0.dp, 0.dp)
-                        .offset(0.dp, 1.dp),
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Left
-                )
-                Text(
-                    text = currencyCode,
-                    modifier = Modifier.fillMaxWidth(),
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
+                Box(modifier = Modifier.padding(start = 10.dp, top = 7.dp)) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = label,
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Start
+                    )
+                }
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = currencyCode,
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
+        })
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CurrencyCardTextField(
+    label: String,
+    modifier: Modifier,
+    textFieldValue: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit
+) {
+    Card(
+        modifier = modifier.offset(0.dp, 1.dp),
+        elevation = CardDefaults.cardElevation(5.dp),
+        content = {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Box(
+                        modifier = Modifier.padding(start = 10.dp, top = 7.dp),
+                        contentAlignment = Alignment.TopStart
+                    ) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = label,
+                            fontSize = 12.sp,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize().offset(y = 10.dp), contentAlignment = Alignment.Center
+                    ) {
+                        TextField(
+                            value = textFieldValue,
+                            singleLine = true,
+                            onValueChange = onValueChange,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            textStyle = TextStyle(
+                                textAlign = TextAlign.Center,
+                                fontSize = 24.sp
+                            ),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = TextFieldDefaults.textFieldColors(
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                containerColor = Color.Transparent
+                            )
+                        )
+                    }
+                }
             }
         })
 }
@@ -361,14 +452,6 @@ fun CurrencyListItem(
                 .fillMaxSize()
                 .padding(0.dp, 0.dp, 15.dp, 0.dp)
         )
-//        Icon(
-//            imageVector = Icons.Default.ShoppingCart,
-//            contentDescription = "",
-//            Modifier
-//                .padding(10.dp, 10.dp, 0.dp, 10.dp)
-//                .size(30.dp)
-//                .align(Alignment.CenterStart)
-//        )
         Text(
             text = if (amount == 0.00) "-" else amount.toString(),
             fontSize = 25.sp,
@@ -426,13 +509,6 @@ fun CurrencyPickerListItem(item: CurrencyAndCountry, onCurrencyPickerListItemCli
                 modifier = Modifier.padding(0.dp, 0.dp, 15.dp, 0.dp),
                 textAlign = TextAlign.Center
             )
-//            androidx.compose.material3.Icon(
-//                imageVector = Icons.Default.ShoppingCart,
-//                contentDescription = "",
-//                Modifier
-//                    .padding(10.dp)
-//                    .size(35.dp)
-//            )
         }
     }
 }

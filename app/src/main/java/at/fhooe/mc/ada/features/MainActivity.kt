@@ -7,7 +7,6 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import at.fhooe.mc.ada.features.feature_currencyConversion.domain.MainViewModel
-import at.fhooe.mc.ada.ui.MainScreen
 import at.fhooe.mc.ada.ui.theme.AndroidAdvancedProject2022Theme
 import dagger.hilt.android.AndroidEntryPoint
 

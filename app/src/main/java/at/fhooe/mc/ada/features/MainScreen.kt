@@ -1,6 +1,7 @@
-package at.fhooe.mc.ada.ui
+package at.fhooe.mc.ada.features
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material3.*
@@ -41,7 +42,7 @@ fun MainScreen(viewModel: MainViewModel) {
 @Composable
 fun BottomBar(navHostController: NavHostController) {
     val screens = listOf(
-        BottomBarScreen.Receipts,
+        BottomBarScreen.BudgetTracker,
         BottomBarScreen.Home,
         BottomBarScreen.CurrencyConverter
     )
@@ -72,7 +73,8 @@ fun RowScope.AddItem(
             Icon(
                 imageVector = screen.icon,
                 contentDescription = screen.title,
-                modifier = Modifier.scale(1.3f)
+                modifier = Modifier.scale(1.3f),
+                tint = if (isSystemInDarkTheme()) Color.White else Color.Black
             )
         }, selected = currentDestination?.hierarchy?.any {
             it.route == screen.route
