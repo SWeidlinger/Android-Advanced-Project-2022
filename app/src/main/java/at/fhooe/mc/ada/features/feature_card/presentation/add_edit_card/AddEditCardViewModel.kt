@@ -29,14 +29,14 @@ class AddEditCardViewModel @Inject constructor(
     private val _cardHolderName = mutableStateOf("")
     val cardHolderName: State<String> = _cardHolderName
 
-    private val _cardNumber = mutableStateOf(-100L)
-    val cardNumber: State<Long> = _cardNumber
+    private val _cardNumber = mutableStateOf("")
+    val cardNumber: State<String> = _cardNumber
 
-    private val _cardSecurityNumber = mutableStateOf(-100)
-    val cardSecurityNumber: State<Int> = _cardSecurityNumber
+    private val _cardSecurityNumber = mutableStateOf("")
+    val cardSecurityNumber: State<String> = _cardSecurityNumber
 
-    private val _cardExpirationDate = mutableStateOf(-100)
-    val cardExpirationDate: State<Int> = _cardExpirationDate
+    private val _cardExpirationDate = mutableStateOf("")
+    val cardExpirationDate: State<String> = _cardExpirationDate
 
     private val _cardIsLocked = mutableStateOf(false)
     val cardIsLocked: State<Boolean> = _cardIsLocked

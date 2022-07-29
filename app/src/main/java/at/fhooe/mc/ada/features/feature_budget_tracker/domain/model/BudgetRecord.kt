@@ -7,8 +7,9 @@ import androidx.room.PrimaryKey
 data class BudgetRecord(
     val budgetRecordName: String,
     val budgetRecordDate: String,
-    val budgetRecordAmount: Double,
-    @PrimaryKey val id: Int? = null
+    val budgetRecordAmount: String,
+    var isBudgetRecordExpense: Boolean,
+    @PrimaryKey var id: Int? = null
 )
 
 class InvalidBudgetRecordException(message: String) : Exception(message)

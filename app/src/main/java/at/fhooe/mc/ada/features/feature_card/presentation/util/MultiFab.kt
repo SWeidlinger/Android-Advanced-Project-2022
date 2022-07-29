@@ -11,6 +11,14 @@ object MultiFab {
         COLLAPSED, EXPANDED
     }
 
+    fun collapse() {
+        multiFabState.value = State.COLLAPSED
+    }
+
+    fun expand() {
+        multiFabState.value = State.EXPANDED
+    }
+
     class Item(
         val icon: ImageVector,
         val color: Color,

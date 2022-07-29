@@ -34,7 +34,7 @@ fun MainScreen(viewModel: MainViewModel) {
 
         }
     }) {
-        BottomNavGraph(navController = navController, paddingValues = it, viewModel = viewModel)
+        BottomNavGraph(navHostController = navController, paddingValues = it, viewModel = viewModel)
     }
 
 }

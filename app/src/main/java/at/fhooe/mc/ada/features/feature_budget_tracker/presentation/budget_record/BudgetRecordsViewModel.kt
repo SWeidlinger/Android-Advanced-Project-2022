@@ -25,6 +25,8 @@ class BudgetRecordsViewModel @Inject constructor(
     private val _state = mutableStateOf(BudgetRecordsState())
     val state: State<BudgetRecordsState> = _state
 
+    private var recentlyDeletedBudgetRecord: BudgetRecord? = null
+
     private var getBudgetRecordsJob: Job? = null
 
     init {
@@ -44,6 +46,15 @@ class BudgetRecordsViewModel @Inject constructor(
             is BudgetRecordsEvent.DeleteNode -> {
                 viewModelScope.launch {
                     budgetRecordUseCases.deleteBudgetRecord(event.budgetRecord)
+                    recentlyDeletedBudgetRecord = event.budgetRecord
+                }
+            }
+            is BudgetRecordsEvent.RestoreRecord -> {
+                viewModelScope.launch {
+                    budgetRecordUseCases.addBudgetRecord(
+                        recentlyDeletedBudgetRecord ?: return@launch
+                    )
+                    recentlyDeletedBudgetRecord = null
                 }
             }
         }

@@ -1,34 +1,47 @@
 package at.fhooe.mc.ada.features.feature_budget_tracker.presentation.add_edit_budget_record
 
 import android.annotation.SuppressLint
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import at.fhooe.mc.ada.features.feature_budget_tracker.domain.model.BudgetRecord
+import at.fhooe.mc.ada.features.feature_budget_tracker.domain.util.BudgetDateMask
+import at.fhooe.mc.ada.features.feature_card.domain.repository.CardRepository
 import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.AddEditCardEvent
 import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.AddEditCardViewModel
 import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.components.CustomOutlinedTextField
+import at.fhooe.mc.ada.features.feature_card.presentation.util.MultiFab
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AddEditBudgetRecordScreen(
     navHostController: NavHostController,
+    modifier: Modifier = Modifier,
+    bottomSheetScaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(),
     viewModel: AddEditBudgetRecordViewModel = hiltViewModel()
 ) {
     val budgetRecordNameState = viewModel.budgetRecordName.value
@@ -52,13 +65,20 @@ fun AddEditBudgetRecordScreen(
     }
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             MediumTopAppBar(title = {
-                if (viewModel.currentBudgetRecordId == null) Text(text = "Add record") else Text(
-                    text = "Edit record"
+                var type = "income"
+                if (viewModel.isBudgetRecordExpense.value) {
+                    type = "expense"
+                }
+                if (viewModel.currentBudgetRecordId == null) Text(text = "Add $type") else Text(
+                    text = "Edit $type"
                 )
             }, navigationIcon = {
-                IconButton(onClick = { navHostController.navigateUp() }) {
+                IconButton(onClick = {
+                    navHostController.navigateUp()
+                }) {
                     Icon(imageVector = Icons.Default.Close, contentDescription = "Back")
                 }
             }, actions = {
@@ -102,25 +122,26 @@ fun AddEditBudgetRecordScreen(
             CustomOutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = budgetRecordDateState,
-                label = { Text(text = "Date") },
+                label = { Text(text = "Date (DD/MM/YYYY)") },
                 onValueChange = {
-                    viewModel.onEvent(
-                        AddEditBudgetRecordEvent.EnteredBudgetRecordDate(
-                            it
+                    if (it.length <= 8) {
+                        viewModel.onEvent(
+                            AddEditBudgetRecordEvent.EnteredBudgetRecordDate(
+                                it
+                            )
                         )
-                    )
-                },
+                    }
+                }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                visualTransformation = BudgetDateMask()
             )
             Spacer(modifier = Modifier.padding(10.dp))
 
             CustomOutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = if (budgetRecordAmountState == 0.0) "" else budgetRecordAmountState.toString(),
+                value = if (budgetRecordAmountState == "") "" else budgetRecordAmountState,
                 label = { Text(text = "Amount") },
                 onValueChange = {
-                    if (it.isNotEmpty() && it != "-") {
-                        viewModel.onEvent(AddEditBudgetRecordEvent.EnteredBudgetRecordAmount(it.toDouble()))
-                    }
+                    viewModel.onEvent(AddEditBudgetRecordEvent.EnteredBudgetRecordAmount(it))
                 }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
         }

@@ -8,9 +8,9 @@ import androidx.room.PrimaryKey
 data class Card(
     val cardName: String,
     val cardHolderName: String,
-    val cardNumber: Long,
-    val securityNumber: Int,
-    val expirationDate: Int,
+    val cardNumber: String,
+    val securityNumber: String,
+    val expirationDate: String,
     val isLocked: Boolean,
     val cardStyle: Int,
     val dateAdded: Long,

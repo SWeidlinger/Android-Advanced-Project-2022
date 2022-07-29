@@ -53,19 +53,38 @@ fun CardDetailedView(
             }
         }
         CardDetailedViewItem("Card name", card.cardName, "")
-        Spacer(modifier = Modifier.padding(10.dp))
+        Spacer(modifier = Modifier.padding(5.dp))
 
         CardDetailedViewItem("Card holder name", card.cardHolderName, "")
-        Spacer(modifier = Modifier.padding(10.dp))
+        Spacer(modifier = Modifier.padding(5.dp))
 
-        CardDetailedViewItem("Card number", card.cardNumber.toString(), "-100")
-        Spacer(modifier = Modifier.padding(10.dp))
+        var cardNumberFormatted = card.cardNumber
+        if (card.cardNumber.length == 16) {
+            cardNumberFormatted = String.format(
+                "%s %s %s %s",
+                card.cardNumber.subSequence(0, 4),
+                card.cardNumber.subSequence(4, 8),
+                card.cardNumber.subSequence(8, 12),
+                card.cardNumber.subSequence(12, 16)
+            )
+        }
+        CardDetailedViewItem("Card number", cardNumberFormatted, "")
+        Spacer(modifier = Modifier.padding(5.dp))
 
-        CardDetailedViewItem("CCV", card.securityNumber.toString(), "-100")
-        Spacer(modifier = Modifier.padding(10.dp))
+        CardDetailedViewItem("CCV", card.securityNumber, "")
+        Spacer(modifier = Modifier.padding(5.dp))
 
-        CardDetailedViewItem("Expiration date", card.expirationDate.toString(), "-100")
-        Spacer(modifier = Modifier.padding(10.dp))
+        var cardExpirationDateFormatted = card.expirationDate
+        if (card.expirationDate.length == 4) {
+            cardExpirationDateFormatted =
+                String.format(
+                    "%s/%s",
+                    card.expirationDate.subSequence(0, 2),
+                    card.expirationDate.subSequence(2, 4)
+                )
+        }
+        CardDetailedViewItem("Expiration date (MM/YY)", cardExpirationDateFormatted, "")
+        Spacer(modifier = Modifier.padding(5.dp))
     }
 }
 
@@ -88,10 +107,10 @@ fun CardDetailedViewItem(descriptionText: String, value: String, defaultValue: S
                     .show()
             }
         }) {
-        Text(text = descriptionText)
+        Text(text = descriptionText, fontSize = 12.sp)
         Text(
             text = if (value == defaultValue) "-" else value,
-            fontSize = 26.sp,
+            fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
     }

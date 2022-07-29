@@ -1,5 +1,6 @@
 package at.fhooe.mc.ada.features.feature_budget_tracker.presentation.add_edit_budget_record
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -25,8 +26,11 @@ class AddEditBudgetRecordViewModel @Inject constructor(
     private val _budgetRecordDate = mutableStateOf("")
     val budgetRecordDate: State<String> = _budgetRecordDate
 
-    private val _budgetRecordAmount = mutableStateOf(0.0)
-    val budgetRecordAmount: State<Double> = _budgetRecordAmount
+    private val _budgetRecordAmount = mutableStateOf("")
+    val budgetRecordAmount: State<String> = _budgetRecordAmount
+
+    private val _isBudgetRecordExpense = mutableStateOf(false)
+    val isBudgetRecordExpense: State<Boolean> = _isBudgetRecordExpense
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -42,8 +46,14 @@ class AddEditBudgetRecordViewModel @Inject constructor(
                         _budgetRecordName.value = budgetRecord.budgetRecordName
                         _budgetRecordDate.value = budgetRecord.budgetRecordDate
                         _budgetRecordAmount.value = budgetRecord.budgetRecordAmount
+                        _isBudgetRecordExpense.value = budgetRecord.isBudgetRecordExpense
                     }
                 }
+            }
+        }
+        savedStateHandle.get<Boolean>("isBudgetRecordExpense")?.let {
+            viewModelScope.launch {
+                _isBudgetRecordExpense.value = it
             }
         }
     }
@@ -59,6 +69,9 @@ class AddEditBudgetRecordViewModel @Inject constructor(
             is AddEditBudgetRecordEvent.EnteredBudgetRecordAmount -> {
                 _budgetRecordAmount.value = event.budgetRecordAmount
             }
+            is AddEditBudgetRecordEvent.ChangedIsBudgetRecordExpense -> {
+                _isBudgetRecordExpense.value = event.isBudgetRecordExpense
+            }
             is AddEditBudgetRecordEvent.SaveBudgetRecord -> {
                 viewModelScope.launch {
                     try {
@@ -67,6 +80,7 @@ class AddEditBudgetRecordViewModel @Inject constructor(
                                 budgetRecordName = budgetRecordName.value,
                                 budgetRecordDate = budgetRecordDate.value,
                                 budgetRecordAmount = budgetRecordAmount.value,
+                                isBudgetRecordExpense = isBudgetRecordExpense.value,
                                 id = currentBudgetRecordId
                             )
                         )
@@ -74,7 +88,7 @@ class AddEditBudgetRecordViewModel @Inject constructor(
                     } catch (e: InvalidCardException) {
                         _eventFlow.emit(
                             UiEvent.ShowSnackbar(
-                                message = e.message ?: "Couldn't save card"
+                                message = e.message ?: "Couldn't save record"
                             )
                         )
                     }

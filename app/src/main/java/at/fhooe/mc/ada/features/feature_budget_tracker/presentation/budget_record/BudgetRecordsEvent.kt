@@ -6,4 +6,5 @@ import at.fhooe.mc.ada.features.feature_budget_tracker.domain.util.BudgetRecordO
 sealed class BudgetRecordsEvent {
     data class Order(val budgetRecordOrder: BudgetRecordOrder) : BudgetRecordsEvent()
     data class DeleteNode(val budgetRecord: BudgetRecord) : BudgetRecordsEvent()
+    object RestoreRecord: BudgetRecordsEvent()
 }

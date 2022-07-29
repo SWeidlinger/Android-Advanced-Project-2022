@@ -3,7 +3,10 @@ package at.fhooe.mc.ada.features.feature_budget_tracker.presentation.add_edit_bu
 sealed class AddEditBudgetRecordEvent {
     data class EnteredBudgetRecordName(val budgetRecordName: String) : AddEditBudgetRecordEvent()
     data class EnteredBudgetRecordDate(val budgetRecordDate: String) : AddEditBudgetRecordEvent()
-    data class EnteredBudgetRecordAmount(val budgetRecordAmount: Double) :
+    data class EnteredBudgetRecordAmount(val budgetRecordAmount: String) :
+        AddEditBudgetRecordEvent()
+
+    data class ChangedIsBudgetRecordExpense(val isBudgetRecordExpense: Boolean) :
         AddEditBudgetRecordEvent()
 
     object SaveBudgetRecord : AddEditBudgetRecordEvent()

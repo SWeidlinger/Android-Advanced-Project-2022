@@ -1,8 +1,6 @@
 package at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -15,13 +13,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import at.fhooe.mc.ada.features.feature_card.domain.util.CardNumberMask
+import at.fhooe.mc.ada.features.feature_card.domain.util.ExpirationDateMask
 import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.components.CardStyleCard
 import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.components.CustomOutlinedTextField
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -111,14 +110,15 @@ fun AddEditCardScreen(
 
             CustomOutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = if (cardNumberState != -100L) cardNumberState.toString() else "",
+                value = if (cardNumberState != "") cardNumberState else "",
                 label = { Text(text = "Card number") },
                 onValueChange = {
-                    if (it.isNotEmpty()) {
-                        viewModel.onEvent(AddEditCardEvent.EnteredCardNumber(it.toLong()))
+                    if (it.length <= 16) {
+                        viewModel.onEvent(AddEditCardEvent.EnteredCardNumber(it))
                     }
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                visualTransformation = CardNumberMask()
             )
             Spacer(modifier = Modifier.padding(10.dp))
 
@@ -132,11 +132,11 @@ fun AddEditCardScreen(
                     modifier = Modifier
                         .fillMaxWidth(0.5f)
                         .padding(end = 10.dp),
-                    value = if (cardSecurityNumberState != -100) cardSecurityNumberState.toString() else "",
+                    value = if (cardSecurityNumberState != "") cardSecurityNumberState else "",
                     label = { Text(text = "CCV") },
                     onValueChange = {
-                        if (it.isNotEmpty()) {
-                            viewModel.onEvent(AddEditCardEvent.EnteredSecurityNumber(it.toInt()))
+                        if (it.length <= 3) {
+                            viewModel.onEvent(AddEditCardEvent.EnteredSecurityNumber(it))
                         }
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -144,14 +144,15 @@ fun AddEditCardScreen(
 
                 CustomOutlinedTextField(
                     modifier = Modifier,
-                    value = if (cardExpirationDateState != -100) cardExpirationDateState.toString() else "",
-                    label = { Text(text = "Expiration date") },
+                    value = if (cardExpirationDateState != "") cardExpirationDateState else "",
+                    label = { Text(text = "MM/YY") },
                     onValueChange = {
-                        if (it.isNotEmpty()) {
-                            viewModel.onEvent(AddEditCardEvent.EnteredExpirationDate(it.toInt()))
+                        if (it.length <= 4) {
+                            viewModel.onEvent(AddEditCardEvent.EnteredExpirationDate(it))
                         }
                     },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    visualTransformation = ExpirationDateMask()
                 )
             }
 
@@ -162,7 +163,7 @@ fun AddEditCardScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Lock card", fontSize = 18.sp)
+                Text(text = "Encrypt card", fontSize = 18.sp)
                 Switch(
                     checked = isLockedState,
                     thumbContent = {

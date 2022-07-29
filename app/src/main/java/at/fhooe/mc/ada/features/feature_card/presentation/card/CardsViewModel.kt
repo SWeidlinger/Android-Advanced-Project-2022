@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import at.fhooe.mc.ada.features.feature_card.domain.use_case.CardUseCases
 import at.fhooe.mc.ada.features.feature_card.domain.util.CardOrder
 import at.fhooe.mc.ada.core.domain.util.OrderType
+import at.fhooe.mc.ada.features.feature_card.domain.model.Card
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -21,6 +22,8 @@ class CardsViewModel @Inject constructor(
 
     private val _state = mutableStateOf(CardsState())
     val state: State<CardsState> = _state
+
+    private var recentlyDeletedCard: Card? = null
 
     private var getCardsJob: Job? = null
 
@@ -41,6 +44,13 @@ class CardsViewModel @Inject constructor(
             is CardsEvent.DeleteNode -> {
                 viewModelScope.launch {
                     cardUseCases.deleteCard(event.card)
+                    recentlyDeletedCard = event.card
+                }
+            }
+            is CardsEvent.RestoreCard -> {
+                viewModelScope.launch {
+                    cardUseCases.addCard(recentlyDeletedCard ?: return@launch)
+                    recentlyDeletedCard = null
                 }
             }
         }

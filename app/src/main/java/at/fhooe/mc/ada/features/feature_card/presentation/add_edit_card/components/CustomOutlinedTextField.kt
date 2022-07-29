@@ -1,15 +1,12 @@
 package at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.AddEditCardEvent
 
 @Composable
 fun CustomOutlinedTextField(
@@ -18,7 +15,8 @@ fun CustomOutlinedTextField(
     label: @Composable() () -> Unit,
     onValueChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    singleLine: Boolean = true
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    singleLine: Boolean = true,
 ) {
     OutlinedTextField(
         modifier = modifier,
@@ -27,6 +25,7 @@ fun CustomOutlinedTextField(
         onValueChange = onValueChange,
         singleLine = singleLine,
         keyboardOptions = keyboardOptions,
-        shape = RoundedCornerShape(10.dp)
+        shape = RoundedCornerShape(10.dp),
+        visualTransformation = visualTransformation
     )
 }
