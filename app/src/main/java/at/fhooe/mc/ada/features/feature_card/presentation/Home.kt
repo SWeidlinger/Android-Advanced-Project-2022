@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
@@ -46,6 +47,7 @@ import at.fhooe.mc.ada.features.feature_card.presentation.card.components.OrderS
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
+import at.fhooe.mc.ada.R
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -134,13 +136,21 @@ fun HomeScreen(
             FloatingActionButton(onClick = {
                 navHostController.navigate(Screen.AddEditCardScreen.route)
             }, containerColor = MaterialTheme.colorScheme.primary) {
-                Icon(imageVector = Icons.Default.AddCard, contentDescription = "Add new Card")
+                Icon(imageVector = Icons.Default.AddCard, contentDescription = stringResource(id = R.string.add_new_card))
             }
         }, bottomBar = {
-            NavigationBar() {
+            NavigationBar(contentColor = MaterialTheme.colorScheme.secondary) {
                 BottomBar(navHostController = navHostController)
             }
         }, scaffoldState = scaffoldState,
+            snackbarHost = {
+                SnackbarHost(it) { data ->
+                    Snackbar(
+                        actionColor = MaterialTheme.colorScheme.primary,
+                        snackbarData = data
+                    )
+                }
+            },
             backgroundColor = MaterialTheme.colorScheme.background,
             content = {
                 androidx.compose.material.Scaffold(topBar = {
@@ -205,7 +215,9 @@ fun HomeScreen(
                                 pagerState = pagerState,
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
-                                    .padding(16.dp),
+                                    .padding(end = 16.dp, start = 16.dp),
+                                activeColor = MaterialTheme.colorScheme.onBackground,
+                                inactiveColor = MaterialTheme.colorScheme.onBackground.copy(0.5f)
                             )
                         } else {
                             Box(
@@ -218,12 +230,12 @@ fun HomeScreen(
                                     }
                                     .background(
                                         shape = RoundedCornerShape(10.dp),
-                                        color = Color.LightGray
+                                        color = MaterialTheme.colorScheme.secondary
                                     ),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = "Add a card!",
+                                    text = stringResource(id = R.string.add_a_card),
                                     style = MaterialTheme.typography.headlineLarge,
                                     modifier = Modifier.fillMaxWidth(),
                                     textAlign = TextAlign.Center

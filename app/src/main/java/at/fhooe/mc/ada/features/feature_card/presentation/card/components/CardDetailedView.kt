@@ -17,12 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.fhooe.mc.ada.features.feature_card.domain.model.Card
+import at.fhooe.mc.ada.R
 
 @Composable
 fun CardDetailedView(
@@ -45,17 +47,17 @@ fun CardDetailedView(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onEditClick) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit card")
+                    Icon(imageVector = Icons.Default.Edit, contentDescription = stringResource(id = R.string.edit_card))
                 }
                 IconButton(onClick = onDeleteClick) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete card")
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(id = R.string.delete_card))
                 }
             }
         }
-        CardDetailedViewItem("Card name", card.cardName, "")
+        CardDetailedViewItem(stringResource(id = R.string.card_name), card.cardName, "")
         Spacer(modifier = Modifier.padding(5.dp))
 
-        CardDetailedViewItem("Card holder name", card.cardHolderName, "")
+        CardDetailedViewItem(stringResource(id = R.string.card_holder_name), card.cardHolderName, "")
         Spacer(modifier = Modifier.padding(5.dp))
 
         var cardNumberFormatted = card.cardNumber
@@ -68,10 +70,10 @@ fun CardDetailedView(
                 card.cardNumber.subSequence(12, 16)
             )
         }
-        CardDetailedViewItem("Card number", cardNumberFormatted, "")
+        CardDetailedViewItem(stringResource(id = R.string.card_number), cardNumberFormatted, "")
         Spacer(modifier = Modifier.padding(5.dp))
 
-        CardDetailedViewItem("CCV", card.securityNumber, "")
+        CardDetailedViewItem(stringResource(id = R.string.ccv), card.securityNumber, "")
         Spacer(modifier = Modifier.padding(5.dp))
 
         var cardExpirationDateFormatted = card.expirationDate
@@ -83,7 +85,7 @@ fun CardDetailedView(
                     card.expirationDate.subSequence(2, 4)
                 )
         }
-        CardDetailedViewItem("Expiration date (MM/YY)", cardExpirationDateFormatted, "")
+        CardDetailedViewItem(stringResource(id = R.string.expiration_date), cardExpirationDateFormatted, "")
         Spacer(modifier = Modifier.padding(5.dp))
     }
 }

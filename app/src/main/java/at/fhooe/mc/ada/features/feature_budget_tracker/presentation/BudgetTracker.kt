@@ -36,12 +36,14 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import at.fhooe.mc.ada.R
 import at.fhooe.mc.ada.core.presentation.Screen
 import at.fhooe.mc.ada.core.presentation.multiFab.AddNewItemMultiFab
 import at.fhooe.mc.ada.features.BottomBar
@@ -49,13 +51,16 @@ import at.fhooe.mc.ada.features.feature_budget_tracker.presentation.add_edit_bud
 import at.fhooe.mc.ada.features.feature_budget_tracker.presentation.budget_record.BudgetRecordsEvent
 import at.fhooe.mc.ada.features.feature_budget_tracker.presentation.budget_record.BudgetRecordsViewModel
 import at.fhooe.mc.ada.features.feature_budget_tracker.presentation.budget_record.components.ListItemBudgetTracker
-import at.fhooe.mc.ada.features.feature_card.presentation.util.MultiFab
+import at.fhooe.mc.ada.core.presentation.multiFab.MultiFab
 import at.fhooe.mc.ada.ui.theme.NegativeRed
 import at.fhooe.mc.ada.ui.theme.PositiveGreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint(
+    "UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter",
+    "RememberReturnType"
+)
 @Composable
 fun BudgetTrackerScreen(
     title: String,
@@ -108,6 +113,14 @@ fun BudgetTrackerScreen(
                 }, modifier = Modifier.padding(paddingValues)
             )
         }, scaffoldState = scaffoldState,
+            snackbarHost = {
+                SnackbarHost(it) { data ->
+                    Snackbar(
+                        actionColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                        snackbarData = data
+                    )
+                }
+            },
             content = {
                 Scaffold(bottomBar = {
                     BottomBar(navHostController = navHostController)
@@ -141,10 +154,10 @@ fun BudgetTrackerScreen(
                                     verticalArrangement = Arrangement.Center,
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-                                    Text(text = "Current budget")
+                                    Text(text = stringResource(id = R.string.current_budget))
                                     Text(
                                         text = if (budgetRecordsAmount == 0.0) "-" else budgetRecordsAmount.toString(),
-                                        fontSize = 50.sp,
+                                        fontSize = 55.sp,
                                         fontWeight = FontWeight.Bold,
                                         textAlign = TextAlign.Center
                                     )
@@ -153,6 +166,7 @@ fun BudgetTrackerScreen(
                             Surface(
                                 modifier = Modifier.fillMaxSize(),
                                 shape = RoundedCornerShape(topStart = 35.dp, topEnd = 35.dp),
+                                color = androidx.compose.material3.MaterialTheme.colorScheme.background,
                                 elevation = 5.dp
                             ) {
                                 Box(
@@ -166,7 +180,10 @@ fun BudgetTrackerScreen(
                                             horizontalAlignment = Alignment.CenterHorizontally,
                                             verticalArrangement = Arrangement.Center
                                         ) {
-                                            Text(text = "No records available!", fontSize = 20.sp)
+                                            Text(
+                                                text = stringResource(id = R.string.no_records_available),
+                                                fontSize = 20.sp
+                                            )
                                         }
                                     } else {
                                         LazyColumn(content = {
@@ -181,6 +198,7 @@ fun BudgetTrackerScreen(
                                                             }
                                                             //Delete
                                                             DismissValue.DismissedToStart -> {
+                                                                viewModelState.budgetRecords
                                                                 viewModel.onEvent(
                                                                     BudgetRecordsEvent.DeleteNode(
                                                                         item
@@ -201,7 +219,7 @@ fun BudgetTrackerScreen(
                                                                 false
                                                             }
                                                             DismissValue.Default -> {
-                                                                true
+                                                                false
                                                             }
                                                         }
                                                     }
@@ -348,7 +366,7 @@ fun GetItemsMultiFab(
         MultiFab.Item(
             icon = Icons.Filled.Savings,
             color = Color.Green,
-            label = "Add income",
+            label = stringResource(id = R.string.add_income),
             description = "",
             identifier = "AddIncomeFab",
             onClick = {
@@ -359,7 +377,7 @@ fun GetItemsMultiFab(
         MultiFab.Item(
             icon = Icons.Filled.ShoppingCart,
             color = Color.Red,
-            label = "Add expense",
+            label = stringResource(id = R.string.add_expense),
             description = "",
             identifier = "AddExpenseFab",
             onClick = {

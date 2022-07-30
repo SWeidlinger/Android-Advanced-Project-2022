@@ -1,8 +1,10 @@
 package at.fhooe.mc.ada.core.presentation
 
+import android.content.res.Resources
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
+import at.fhooe.mc.ada.R
 
 sealed class BottomBarScreen(
     val route: String,

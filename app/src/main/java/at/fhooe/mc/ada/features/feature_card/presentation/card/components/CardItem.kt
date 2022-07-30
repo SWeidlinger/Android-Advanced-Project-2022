@@ -50,7 +50,7 @@ fun CardItem(card: Card, modifier: Modifier = Modifier, onClick: () -> Unit) {
                         .fillMaxSize()
                         .padding(10.dp),
                     painter = painterResource(R.drawable.test_card),
-                    contentDescription = "test",
+                    contentDescription = "",
                     contentScale = ContentScale.FillBounds
                 )
             }

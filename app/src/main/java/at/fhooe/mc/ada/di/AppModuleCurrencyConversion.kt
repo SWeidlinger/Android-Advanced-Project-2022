@@ -1,10 +1,10 @@
 package at.fhooe.mc.ada.di
 
-import at.fhooe.mc.ada.features.feature_currencyConversion.data.repository.DefaultMainRepository
-import at.fhooe.mc.ada.features.feature_currencyConversion.data.repository.MainRepository
-import at.fhooe.mc.ada.features.feature_currencyConversion.data.CurrencyApi
-import at.fhooe.mc.ada.features.feature_currencyConversion.data.Constants.Companion.BASE_URL
-import at.fhooe.mc.ada.features.feature_currencyConversion.domain.DispatcherProvider
+import at.fhooe.mc.ada.features.feature_currency_converter.data.repository.DefaultMainRepository
+import at.fhooe.mc.ada.features.feature_currency_converter.data.repository.MainRepository
+import at.fhooe.mc.ada.features.feature_currency_converter.data.CurrencyApi
+import at.fhooe.mc.ada.features.feature_currency_converter.data.Constants.Companion.BASE_URL
+import at.fhooe.mc.ada.features.feature_currency_converter.domain.DispatcherProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

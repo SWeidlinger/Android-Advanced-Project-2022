@@ -1,8 +1,8 @@
-package at.fhooe.mc.ada.features.feature_currencyConversion.data.repository
+package at.fhooe.mc.ada.features.feature_currency_converter.data.repository
 
-import at.fhooe.mc.ada.features.feature_currencyConversion.data.CurrencyApi
-import at.fhooe.mc.ada.features.feature_currencyConversion.data.models.CurrencyResponse
-import at.fhooe.mc.ada.features.feature_currencyConversion.domain.Resource
+import at.fhooe.mc.ada.features.feature_currency_converter.data.CurrencyApi
+import at.fhooe.mc.ada.features.feature_currency_converter.data.models.CurrencyResponse
+import at.fhooe.mc.ada.features.feature_currency_converter.domain.Resource
 import java.lang.Exception
 import javax.inject.Inject
 

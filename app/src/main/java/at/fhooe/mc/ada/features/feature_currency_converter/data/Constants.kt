@@ -1,6 +1,4 @@
-package at.fhooe.mc.ada.features.feature_currencyConversion.data
-
-import at.fhooe.mc.ada.features.feature_currencyConversion.data.CurrencyAndCountry
+package at.fhooe.mc.ada.features.feature_currency_converter.data
 
 class Constants {
     companion object {

@@ -1,11 +1,11 @@
-package at.fhooe.mc.ada.features.feature_currencyConversion.domain
+package at.fhooe.mc.ada.features.feature_currency_converter.domain
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import at.fhooe.mc.ada.features.feature_currencyConversion.data.models.Rates
-import at.fhooe.mc.ada.features.feature_currencyConversion.data.repository.MainRepository
+import at.fhooe.mc.ada.features.feature_currency_converter.data.models.Rates
+import at.fhooe.mc.ada.features.feature_currency_converter.data.repository.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -12,11 +12,14 @@ val Pink40 = Color(0xFF7D5260)
 
 val MainBlue = Color(0xFF3AADDF)
 val MediumBlue = Color(0xFF2C85AB)
-val LightBlue = Color(0xFFE7F6FF)
-val DarkBlue = Color(0xFF19495E)
+val LightBlue = Color(0xFFC3D1DA)
+val DarkBlue = Color(0xFF0D3547)
 
 val TextWhite = Color(0xFFFFFFFF)
 val TextBlack = Color(0xFF000000)
 
 val PositiveGreen = Color(0xFF3EDA60)
 val NegativeRed = Color(0xFFFF4547)
+
+val NavigationIndicatorLight = Color(0xFFC3D1DA)
+val NavigationIndicatorDark = Color(0xFF124861)

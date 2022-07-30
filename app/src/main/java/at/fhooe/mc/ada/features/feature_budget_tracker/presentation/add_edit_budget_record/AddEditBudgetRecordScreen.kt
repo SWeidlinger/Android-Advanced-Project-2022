@@ -1,8 +1,6 @@
 package at.fhooe.mc.ada.features.feature_budget_tracker.presentation.add_edit_budget_record
 
 import android.annotation.SuppressLint
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,21 +17,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import at.fhooe.mc.ada.features.feature_budget_tracker.domain.model.BudgetRecord
+import at.fhooe.mc.ada.R
 import at.fhooe.mc.ada.features.feature_budget_tracker.domain.util.BudgetDateMask
-import at.fhooe.mc.ada.features.feature_card.domain.repository.CardRepository
-import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.AddEditCardEvent
-import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.AddEditCardViewModel
 import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.components.CustomOutlinedTextField
-import at.fhooe.mc.ada.features.feature_card.presentation.util.MultiFab
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -68,18 +61,21 @@ fun AddEditBudgetRecordScreen(
         modifier = modifier,
         topBar = {
             MediumTopAppBar(title = {
-                var type = "income"
+                var type = stringResource(id = R.string.income)
                 if (viewModel.isBudgetRecordExpense.value) {
-                    type = "expense"
+                    type = stringResource(id = R.string.expense)
                 }
-                if (viewModel.currentBudgetRecordId == null) Text(text = "Add $type") else Text(
-                    text = "Edit $type"
+                if (viewModel.currentBudgetRecordId == null) Text(text = "${stringResource(id = R.string.add)} $type") else Text(
+                    text = "${stringResource(id = R.string.edit)} $type"
                 )
             }, navigationIcon = {
                 IconButton(onClick = {
                     navHostController.navigateUp()
                 }) {
-                    Icon(imageVector = Icons.Default.Close, contentDescription = "Back")
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(id = R.string.back)
+                    )
                 }
             }, actions = {
                 Button(
@@ -89,7 +85,10 @@ fun AddEditBudgetRecordScreen(
                     onClick = { viewModel.onEvent(AddEditBudgetRecordEvent.SaveBudgetRecord) },
                     content = {
                         var text = ""
-                        text = if (viewModel.currentBudgetRecordId == null) "Add" else "Edit"
+                        text =
+                            if (viewModel.currentBudgetRecordId == null) stringResource(id = R.string.add) else stringResource(
+                                id = R.string.edit
+                            )
                         Text(text = text, fontSize = 16.sp)
                     }, shape = RoundedCornerShape(10.dp)
                 )
@@ -108,7 +107,7 @@ fun AddEditBudgetRecordScreen(
             CustomOutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = budgetRecordNameState,
-                label = { Text(text = "Name") },
+                label = { Text(text = stringResource(id = R.string.name)) },
                 onValueChange = {
                     viewModel.onEvent(
                         AddEditBudgetRecordEvent.EnteredBudgetRecordName(
@@ -122,7 +121,7 @@ fun AddEditBudgetRecordScreen(
             CustomOutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = budgetRecordDateState,
-                label = { Text(text = "Date (DD/MM/YYYY)") },
+                label = { Text(text = stringResource(id = R.string.date_dd_mm_yy)) },
                 onValueChange = {
                     if (it.length <= 8) {
                         viewModel.onEvent(
@@ -139,7 +138,7 @@ fun AddEditBudgetRecordScreen(
             CustomOutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = if (budgetRecordAmountState == "") "" else budgetRecordAmountState,
-                label = { Text(text = "Amount") },
+                label = { Text(text = stringResource(id = R.string.amount)) },
                 onValueChange = {
                     viewModel.onEvent(AddEditBudgetRecordEvent.EnteredBudgetRecordAmount(it))
                 }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)

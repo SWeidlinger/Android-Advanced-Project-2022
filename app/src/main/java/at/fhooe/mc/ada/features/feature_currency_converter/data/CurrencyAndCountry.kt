@@ -1,4 +1,4 @@
-package at.fhooe.mc.ada.features.feature_currencyConversion.data
+package at.fhooe.mc.ada.features.feature_currency_converter.data
 
 import androidx.compose.ui.graphics.painter.Painter
 

@@ -1,4 +1,4 @@
-package at.fhooe.mc.ada.features.feature_currencyConversion.data.models
+package at.fhooe.mc.ada.features.feature_currency_converter.data.models
 
 data class CurrencyResponse(
     val base: String,

@@ -1,7 +1,64 @@
 <resources>
     <string name="app_name">Android-Advanced-Project-2022</string>
-    <string name="add_new_item">Add a new item to your wallet</string>
-    <string name="add_new_card">Add a new card to your wallet</string>
-    <string name="add_new_ticket">Add a new ticket to your wallet</string>
-    <string name="add_new_invoice">Add a new invoice to your wallet</string>
+<!--    MultiFab-->
+    <string name="add_new_item_wallet">Add a new item to your wallet</string>
+    <string name="add_new_card_wallet">Add a new card to your wallet</string>
+    <string name="add_income">Add income</string>
+    <string name="add_expense">Add expense</string>
+
+<!--    Feature AddEditBudgetRecord-->
+    <string name="edit">Edit</string>
+    <string name="add">Add</string>
+    <string name="back">Back</string>
+    <string name="income">income</string>
+    <string name="expense">expense</string>
+    <string name="name">Name</string>
+    <string name="date_dd_mm_yy">Date (DD/MM/YYYY)</string>
+    <string name="amount">Amount</string>
+    <string name="not_save_record">Could not save record</string>
+
+<!--    Feature Budget Tracker-->
+    <string name="current_budget">Current budget</string>
+    <string name="no_records_available">No records available!</string>
+
+<!--    Feature AddEditCard-->
+    <string name="checked_card">Checked card</string>
+    <string name="add_card">Add card</string>
+    <string name="edit_card">Edit card</string>
+    <string name="card_name">Card name</string>
+    <string name="card_holder_name">Card holder name</string>
+    <string name="card_number">Card number</string>
+    <string name="ccv">CCV</string>
+    <string name="date_mm_yy">MM/YY</string>
+    <string name="encrypt_card">Encrypt card</string>
+    <string name="card_style">Card style</string>
+
+<!--    Feature Card-->
+    <string name="delete_card">Delete card</string>
+    <string name="expiration_date">Expiration date (MM/YY)</string>
+    <string name="copied_to_clipboard">copied to clipboard!</string>
+
+<!--    CardScreen-->
+    <string name="add_new_card">Add new  card</string>
+    <string name="add_a_card">Add a card!</string>
+
+<!--    Feature CurrencyConverter-->
+    <string name="close_bottom_sheet">Close bottom sheet</string>
+    <string name="error_conversion">Please specify FROM and TO currency</string>
+    <string name="convert_currency">Convert currency</string>
+    <string name="convert">Convert</string>
+    <string name="from">from</string>
+    <string name="to">to</string>
+    <string name="converted_amount">Converted amount</string>
+
+<!--    Common-->
+    <string name="undo">Undo</string>
+    <string name="date_added">Date added</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+
+<!--    MainScreens-->
+    <string name="cards_screen_title">Cards</string>
+    <string name="budget_screen_title">Budget</string>
+    <string name="currency_screen_title">Currency</string>
 </resources>

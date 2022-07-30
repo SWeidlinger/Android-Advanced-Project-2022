@@ -3,7 +3,6 @@ package at.fhooe.mc.ada.features
 import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -16,9 +15,11 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import at.fhooe.mc.ada.features.feature_currencyConversion.domain.MainViewModel
+import at.fhooe.mc.ada.features.feature_currency_converter.domain.MainViewModel
 import at.fhooe.mc.ada.core.presentation.BottomBarScreen
 import at.fhooe.mc.ada.core.presentation.BottomNavGraph
+import at.fhooe.mc.ada.ui.theme.TextBlack
+import at.fhooe.mc.ada.ui.theme.TextWhite
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -49,7 +50,7 @@ fun BottomBar(navHostController: NavHostController) {
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    NavigationBar() {
+    NavigationBar(contentColor = MaterialTheme.colorScheme.secondary) {
         screens.forEach {
             AddItem(
                 screen = it,
@@ -74,7 +75,7 @@ fun RowScope.AddItem(
                 imageVector = screen.icon,
                 contentDescription = screen.title,
                 modifier = Modifier.scale(1.3f),
-                tint = if (isSystemInDarkTheme()) Color.White else Color.Black
+                tint = if (isSystemInDarkTheme()) TextWhite else TextBlack
             )
         }, selected = currentDestination?.hierarchy?.any {
             it.route == screen.route
@@ -84,5 +85,5 @@ fun RowScope.AddItem(
                 popUpTo(navHostController.graph.findStartDestination().id)
                 launchSingleTop = true
             }
-        })
+        }, colors = NavigationBarItemDefaults.colors(indicatorColor = MaterialTheme.colorScheme.surfaceTint))
 }

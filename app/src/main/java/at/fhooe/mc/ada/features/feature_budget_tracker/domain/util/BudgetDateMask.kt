@@ -26,7 +26,6 @@ class BudgetDateMask : VisualTransformation {
                 if (offset <= 1) return offset
                 if (offset <= 3) return offset + 1
                 if (offset <= 8) return offset + 2
-                Log.e("Offset ORIGINAL", offset.toString())
                 return 9
             }
 
@@ -34,7 +33,6 @@ class BudgetDateMask : VisualTransformation {
                 if (offset <= 1) return offset
                 if (offset <= 3) return offset - 1
                 if (offset <= 8) return offset - 2
-                Log.e("Offset TRANSFORMED", offset.toString())
                 return 9
             }
         }

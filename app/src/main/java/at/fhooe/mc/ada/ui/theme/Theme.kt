@@ -3,11 +3,7 @@ package at.fhooe.mc.ada.ui.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
@@ -17,10 +13,11 @@ import androidx.core.view.ViewCompat
 
 private val DarkColorScheme = darkColorScheme(
     primary = MainBlue,
-    secondary = LightBlue,
+    secondary = DarkBlue,
     tertiary = DarkBlue,
     onPrimary = TextWhite,
-    onSecondary = TextWhite
+    onSecondary = TextWhite,
+    surfaceTint = NavigationIndicatorDark
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -28,7 +25,8 @@ private val LightColorScheme = lightColorScheme(
     secondary = LightBlue,
     tertiary = DarkBlue,
     onPrimary = TextBlack,
-    onSecondary = TextBlack
+    onSecondary = TextBlack,
+    surfaceTint = NavigationIndicatorLight
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -56,6 +54,7 @@ fun AndroidAdvancedProject2022Theme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {

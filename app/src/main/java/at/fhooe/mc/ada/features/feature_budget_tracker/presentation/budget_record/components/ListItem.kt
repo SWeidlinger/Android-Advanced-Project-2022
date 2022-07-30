@@ -11,6 +11,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import at.fhooe.mc.ada.ui.theme.NegativeRed
+import at.fhooe.mc.ada.ui.theme.PositiveGreen
 import kotlin.math.round
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,7 +31,7 @@ fun ListItemBudgetTracker(
             topEnd = 10.dp,
             topStart = 10.dp
         ) else RoundedCornerShape(0.dp),
-        colors = CardDefaults.cardColors(Color.White)
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
     ) {
         Box(
             modifier = Modifier
@@ -50,10 +52,10 @@ fun ListItemBudgetTracker(
                 if (isExpense) finalAmount *= -1
             }
             var finalAmountString = if (finalAmount < 0) "$finalAmount" else "+$finalAmount"
-            var color = if (isExpense) Color.Red else Color.Green
+            var color = if (isExpense) NegativeRed else PositiveGreen
             Text(
                 text = if (finalAmount == 0.0) "0.0" else finalAmountString,
-                color = if (finalAmount == 0.0) Color.Black else color,
+                color = if (finalAmount == 0.0) MaterialTheme.colorScheme.onBackground else color,
                 fontSize = 24.sp,
                 modifier = Modifier.fillMaxSize(),
                 textAlign = TextAlign.Right

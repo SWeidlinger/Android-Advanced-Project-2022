@@ -19,7 +19,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import at.fhooe.mc.ada.R
-import at.fhooe.mc.ada.features.feature_card.presentation.util.MultiFab
 
 @Composable
 fun AddNewItemMultiFab(
@@ -74,7 +73,7 @@ fun AddNewItemMultiFab(
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,
-                contentDescription = stringResource(id = R.string.add_new_item),
+                contentDescription = stringResource(id = R.string.add_new_item_wallet),
                 modifier = Modifier.rotate(rotate)
             )
         }

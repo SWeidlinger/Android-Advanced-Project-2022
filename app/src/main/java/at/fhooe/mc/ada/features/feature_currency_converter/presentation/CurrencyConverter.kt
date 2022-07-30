@@ -1,10 +1,10 @@
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package at.fhooe.mc.ada.features.feature_currencyConversion.presentation
+package at.fhooe.mc.ada.features.feature_currency_converter.presentation
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,14 +42,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import at.fhooe.mc.ada.features.feature_currencyConversion.domain.CurrencyWithRate
-import at.fhooe.mc.ada.features.feature_currencyConversion.domain.MainViewModel
-import at.fhooe.mc.ada.features.feature_currencyConversion.data.CurrencyAndCountry
+import at.fhooe.mc.ada.features.feature_currency_converter.domain.CurrencyWithRate
+import at.fhooe.mc.ada.features.feature_currency_converter.domain.MainViewModel
+import at.fhooe.mc.ada.features.feature_currency_converter.data.CurrencyAndCountry
 import at.fhooe.mc.ada.features.BottomBar
-import at.fhooe.mc.ada.features.feature_card.presentation.util.MultiFab
-import at.fhooe.mc.ada.features.feature_currencyConversion.data.Constants
+import at.fhooe.mc.ada.features.feature_currency_converter.data.Constants
 import kotlinx.coroutines.launch
 import kotlin.math.round
+import at.fhooe.mc.ada.R
+import at.fhooe.mc.ada.features.feature_currency_converter.presentation.components.CurrencyCard
+import at.fhooe.mc.ada.features.feature_currency_converter.presentation.components.CurrencyCardTextField
+import at.fhooe.mc.ada.features.feature_currency_converter.presentation.components.CurrencyListItem
+import at.fhooe.mc.ada.features.feature_currency_converter.presentation.components.CurrencyPickerListItem
 
 @OptIn(
     ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class
@@ -79,7 +84,10 @@ fun CurrencyConverterScreen(
         mutableStateOf("-")
     }
 
-    var isFrom = true
+    var isFrom by remember {
+        mutableStateOf(false)
+    }
+
     val scope = rememberCoroutineScope()
     val scaffoldStateBottomSheet = rememberBottomSheetScaffoldState()
 
@@ -91,7 +99,7 @@ fun CurrencyConverterScreen(
 
     if (scaffoldStateBottomSheet.bottomSheetState.isAnimationRunning && scaffoldStateBottomSheet.bottomSheetState.targetValue == BottomSheetValue.Collapsed) {
         bottomSheetExpanded = false
-    }else if (scaffoldStateBottomSheet.bottomSheetState.isAnimationRunning && scaffoldStateBottomSheet.bottomSheetState.targetValue == BottomSheetValue.Expanded){
+    } else if (scaffoldStateBottomSheet.bottomSheetState.isAnimationRunning && scaffoldStateBottomSheet.bottomSheetState.targetValue == BottomSheetValue.Expanded) {
         bottomSheetExpanded = true
     }
 
@@ -142,7 +150,7 @@ fun CurrencyConverterScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Close bottom sheet",
+                        contentDescription = stringResource(id = R.string.close_bottom_sheet),
                         modifier = Modifier.scale(1.2f)
                     )
                 }
@@ -190,26 +198,36 @@ fun CurrencyConverterScreen(
             }, containerColor = MaterialTheme.colorScheme.primary) {
                 Icon(
                     imageVector = Icons.Default.Cached,
-                    contentDescription = "Convert Currency"
+                    contentDescription = stringResource(id = R.string.convert_currency)
                 )
                 Spacer(modifier = Modifier.padding(end = 5.dp))
-                Text(text = "Convert")
+                Text(text = stringResource(id = R.string.convert))
             }
         }, bottomBar = {
             BottomBar(navHostController = navHostController)
         }, scaffoldState = scaffoldState,
             content = {
-                androidx.compose.material.Scaffold(topBar = {
-                    SmallTopAppBar(title = { Text(text = title) })
-                },
-                    backgroundColor = MaterialTheme.colorScheme.background,
-                    content = {
+                Column(
+                    Modifier
+                        .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.3f),
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(bottomEnd = 35.dp, bottomStart = 35.dp),
+                        elevation = 5.dp
+                    ) {
                         Column(
-                            Modifier
+                            modifier = Modifier
                                 .fillMaxSize()
-                                .padding(it), horizontalAlignment = Alignment.CenterHorizontally
+                                .padding(top = 25.dp)
                         ) {
-                            Column(modifier = Modifier.fillMaxHeight(0.27f)) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                            ) {
                                 Row(
                                     modifier = Modifier
                                         .padding(10.dp, 1.dp, 10.dp, 5.dp)
@@ -231,7 +249,7 @@ fun CurrencyConverterScreen(
                                                 .fillMaxWidth(0.5f)
                                         ) {
                                             CurrencyCardTextField(
-                                                label = "Amount",
+                                                label = stringResource(id = R.string.amount),
                                                 modifier = Modifier.fillMaxSize(),
                                                 textFieldValue = amountValue,
                                                 onValueChange = { newValue ->
@@ -249,26 +267,26 @@ fun CurrencyConverterScreen(
                                         ) {
                                             CurrencyCard(
                                                 currencyCode = fromCurrencyCode,
-                                                label = "from",
+                                                label = stringResource(R.string.from),
                                                 modifier = Modifier
                                                     .fillMaxWidth(0.5f)
                                                     .fillMaxHeight(),
                                                 onCurrencyCardClick = {
+                                                    isFrom = true
                                                     scope.launch {
-                                                        isFrom = true
                                                         scaffoldStateBottomSheet.bottomSheetState.expand()
                                                     }
                                                 })
                                             Spacer(modifier = Modifier.padding(5.dp))
                                             CurrencyCard(
                                                 currencyCode = toCurrencyCode,
-                                                label = "to",
+                                                label = stringResource(R.string.to),
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .fillMaxHeight(),
                                                 onCurrencyCardClick = {
+                                                    isFrom = false
                                                     scope.launch {
-                                                        isFrom = false
                                                         scaffoldStateBottomSheet.bottomSheetState.expand()
                                                     }
                                                 }
@@ -280,7 +298,6 @@ fun CurrencyConverterScreen(
                                     Modifier
                                         .fillMaxSize()
                                         .padding(10.dp, 0.dp, 10.dp, 0.dp),
-                                    border = BorderStroke(1.dp, Color.Black),
                                     elevation = CardDefaults.cardElevation(0.dp),
                                     colors = CardDefaults.cardColors(Color.Transparent)
                                 ) {
@@ -290,69 +307,69 @@ fun CurrencyConverterScreen(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.Center
                                     ) {
-                                        Row(
-                                            Modifier
-                                                .fillMaxWidth()
-                                                .padding(15.dp, 7.dp, 15.dp, 0.dp),
-                                            horizontalArrangement = Arrangement.SpaceBetween
-                                        ) {
-                                            Text(
-                                                text = "Converted amount",
-                                                textAlign = TextAlign.Center,
-                                                fontSize = 12.sp
-                                            )
-                                            Text(
-                                                text = "$fromCurrencyCode - $toCurrencyCode",
-                                                textAlign = TextAlign.Center,
-                                                fontSize = 12.sp
-                                            )
-                                        }
+//                                        if (resultValue != "-") {
+                                        Text(
+                                            text = "${stringResource(R.string.converted_amount)} ($fromCurrencyCode - $toCurrencyCode)",
+                                            textAlign = TextAlign.Center,
+                                            fontSize = 12.sp
+                                        )
                                         Box(
                                             modifier = Modifier
                                                 .fillMaxSize()
-                                                .padding(15.dp, 5.dp, 15.dp, 10.dp),
+                                                .padding(15.dp, 0.dp, 15.dp, 10.dp),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Text(
                                                 text = resultValue,
-                                                fontSize = 40.sp,
+                                                fontSize = 50.sp,
                                                 maxLines = 1,
                                                 fontWeight = FontWeight.Bold,
                                                 overflow = TextOverflow.Ellipsis
                                             )
                                         }
+//                                        }
                                     }
                                 }
                             }
-                            Card(
-                                modifier = Modifier.padding(10.dp, 15.dp, 10.dp, 0.dp),
-                                shape = RoundedCornerShape(10.dp, 10.dp, 0.dp, 0.dp),
-                                colors = CardDefaults.cardColors(Color.Transparent)
-                            ) {
-                                LazyColumn(content = {
-                                    itemsIndexed(Constants.CURRENCY_CODES_LIST) { index, item: CurrencyAndCountry ->
-                                        var amountFromTextField = 0.00
-                                        if (amountValue.text.isNotEmpty() && !amountValue.text.toDouble()
-                                                .isNaN()
-                                        ) {
-                                            amountFromTextField = amountValue.text.toDouble()
-                                        }
-                                        if (resultValue != "-") {
-                                            CurrencyListItem(
-                                                item,
-                                                currencyList,
-                                                amountFromTextField
-                                            )
-                                        }
-                                        Spacer(modifier = Modifier.padding(5.dp))
-                                        if (index + 1 == Constants.CURRENCY_CODES_LIST.size) {
-                                            Spacer(modifier = Modifier.padding(35.dp))
-                                        }
-                                    }
-                                })
-                            }
                         }
-                    })
+                    }
+                    Card(
+                        modifier = Modifier
+                            .padding(it)
+                            .padding(15.dp, 5.dp, 15.dp, 0.dp),
+                        shape = RoundedCornerShape(10.dp, 10.dp, 0.dp, 0.dp),
+                        colors = CardDefaults.cardColors(Color.Transparent)
+                    ) {
+                        LazyColumn(content = {
+                            itemsIndexed(Constants.CURRENCY_CODES_LIST) { index, item: CurrencyAndCountry ->
+                                var amountFromTextField = 0.00
+                                if (amountValue.text.isNotEmpty() && !amountValue.text.toDouble()
+                                        .isNaN()
+                                ) {
+                                    amountFromTextField = amountValue.text.toDouble()
+                                }
+                                if (resultValue != "-") {
+                                    CurrencyListItem(
+                                        item,
+                                        currencyList,
+                                        amountFromTextField
+                                    )
+
+                                    if (index + 1 == Constants.CURRENCY_CODES_LIST.size) {
+                                        Spacer(modifier = Modifier.padding(40.dp))
+                                    } else {
+                                        Spacer(modifier = Modifier.padding(3.dp))
+                                        androidx.compose.material3.Divider(
+                                            modifier = Modifier.padding(),
+                                            color = Color.LightGray
+                                        )
+                                        Spacer(modifier = Modifier.padding(3.dp))
+                                    }
+                                }
+                            }
+                        })
+                    }
+                }
                 val alphaBackground =
                     if (bottomSheetExpanded) 0.75f else 0f
                 Box(
@@ -376,187 +393,5 @@ fun CurrencyConverterScreen(
                         .fillMaxSize())
                 }
             })
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CurrencyCard(
-    currencyCode: String,
-    label: String,
-    modifier: Modifier,
-    onCurrencyCardClick: () -> Unit
-) {
-    Card(
-        modifier = modifier.offset(0.dp, 1.dp),
-        onClick = onCurrencyCardClick,
-        elevation = CardDefaults.cardElevation(5.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
-        content = {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box(modifier = Modifier.padding(start = 10.dp, top = 7.dp)) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = label,
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.Start
-                    )
-                }
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(
-                        text = currencyCode,
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-
-        })
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CurrencyCardTextField(
-    label: String,
-    modifier: Modifier,
-    textFieldValue: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit
-) {
-    Card(
-        modifier = modifier.offset(0.dp, 1.dp),
-        elevation = CardDefaults.cardElevation(5.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
-        content = {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Box(
-                        modifier = Modifier.padding(start = 10.dp, top = 7.dp),
-                        contentAlignment = Alignment.TopStart
-                    ) {
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = label,
-                            fontSize = 12.sp,
-                            textAlign = TextAlign.Start
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .offset(y = 10.dp), contentAlignment = Alignment.Center
-                    ) {
-                        TextField(
-                            value = textFieldValue,
-                            singleLine = true,
-                            onValueChange = onValueChange,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            textStyle = TextStyle(
-                                textAlign = TextAlign.Center,
-                                fontSize = 24.sp
-                            ),
-                            shape = RoundedCornerShape(10.dp),
-                            colors = TextFieldDefaults.textFieldColors(
-                                focusedIndicatorColor = Color.Transparent,
-                                unfocusedIndicatorColor = Color.Transparent,
-                                containerColor = Color.Transparent
-                            )
-                        )
-                    }
-                }
-            }
-        })
-}
-
-@Composable
-fun CurrencyListItem(
-    item: CurrencyAndCountry,
-    currencyCountryList: List<CurrencyWithRate>,
-    amountFromTextField: Double
-) {
-    var amount = 0.00
-    val currentCountryItem = currencyCountryList.find {
-        it.currencyCode == item.currencyCode
-    }
-
-    if (currentCountryItem != null) {
-        amount = round(amountFromTextField * currentCountryItem.rate * 100) / 100
-    }
-
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(
-            text = item.currencySymbol,
-            fontSize = 20.sp,
-            textAlign = TextAlign.Right,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(0.dp, 0.dp, 15.dp, 0.dp)
-        )
-        Text(
-            text = if (amount == 0.00) "-" else amount.toString(),
-            fontSize = 25.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold, modifier = Modifier
-                .fillMaxSize()
-        )
-        Column(
-            Modifier
-                .padding(10.dp, 5.dp, 0.dp, 5.dp)
-                .fillMaxSize(), horizontalAlignment = Alignment.Start
-        ) {
-            Text(
-                text = item.currencyCode,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Left,
-                fontWeight = FontWeight.Bold, modifier = Modifier.fillMaxWidth()
-            )
-            Text(
-                text = item.countryName,
-                modifier = Modifier.fillMaxWidth(),
-                fontSize = 10.sp,
-                textAlign = TextAlign.Left,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CurrencyPickerListItem(item: CurrencyAndCountry, onCurrencyPickerListItemClick: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxSize(),
-        onClick = onCurrencyPickerListItemClick
-    ) {
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(Modifier.padding(10.dp, 5.dp, 0.dp, 5.dp)) {
-                Text(
-                    text = item.currencyCode,
-                    fontSize = 25.sp,
-                    textAlign = TextAlign.Left,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(text = item.countryName, fontSize = 12.sp, textAlign = TextAlign.Left)
-            }
-            Text(
-                text = item.currencySymbol,
-                fontSize = 25.sp,
-                modifier = Modifier.padding(0.dp, 0.dp, 15.dp, 0.dp),
-                textAlign = TextAlign.Center
-            )
-        }
     }
 }

@@ -1,4 +1,4 @@
-package at.fhooe.mc.ada.features.feature_card.presentation.util
+package at.fhooe.mc.ada.core.presentation.multiFab
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color

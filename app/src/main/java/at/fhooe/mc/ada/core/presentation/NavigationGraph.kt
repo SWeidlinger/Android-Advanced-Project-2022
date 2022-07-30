@@ -12,8 +12,8 @@ import at.fhooe.mc.ada.features.feature_budget_tracker.presentation.BudgetTracke
 import at.fhooe.mc.ada.features.feature_budget_tracker.presentation.add_edit_budget_record.AddEditBudgetRecordScreen
 import at.fhooe.mc.ada.features.feature_card.presentation.HomeScreen
 import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.AddEditCardScreen
-import at.fhooe.mc.ada.features.feature_currencyConversion.domain.MainViewModel
-import at.fhooe.mc.ada.features.feature_currencyConversion.presentation.CurrencyConverterScreen
+import at.fhooe.mc.ada.features.feature_currency_converter.domain.MainViewModel
+import at.fhooe.mc.ada.features.feature_currency_converter.presentation.CurrencyConverterScreen
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -44,6 +44,7 @@ fun BottomNavGraph(
                 viewModel
             )
         }
+
         composable(
             route = Screen.AddEditCardScreen.route + "?cardId={cardId}",
             arguments = listOf(navArgument(name = "cardId") {
