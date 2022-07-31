@@ -18,10 +18,10 @@ fun DefaultFilterChip(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         FilterChip(
+            modifier = modifier,
             selected = selected,
             onClick = onSelect,
             label = { Text(text = text) },

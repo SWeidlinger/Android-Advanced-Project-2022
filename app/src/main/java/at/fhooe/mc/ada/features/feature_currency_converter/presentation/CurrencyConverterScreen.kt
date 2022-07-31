@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import at.fhooe.mc.ada.features.feature_currency_converter.domain.CurrencyWithRate
 import at.fhooe.mc.ada.features.feature_currency_converter.domain.MainViewModel
@@ -68,7 +69,7 @@ fun CurrencyConverterScreen(
     title: String,
     navHostController: NavHostController,
     paddingValues: PaddingValues,
-    viewModel: MainViewModel
+    viewModel: MainViewModel = hiltViewModel()
 ) {
     var fromCurrencyCode by remember {
         mutableStateOf("-")

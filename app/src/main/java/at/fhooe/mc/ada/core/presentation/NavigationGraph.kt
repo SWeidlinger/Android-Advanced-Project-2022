@@ -10,7 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import at.fhooe.mc.ada.features.feature_budget_tracker.presentation.BudgetTrackerScreen
 import at.fhooe.mc.ada.features.feature_budget_tracker.presentation.add_edit_budget_record.AddEditBudgetRecordScreen
-import at.fhooe.mc.ada.features.feature_card.presentation.HomeScreen
+import at.fhooe.mc.ada.features.feature_card.presentation.CardsScreen
 import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.AddEditCardScreen
 import at.fhooe.mc.ada.features.feature_currency_converter.domain.MainViewModel
 import at.fhooe.mc.ada.features.feature_currency_converter.presentation.CurrencyConverterScreen
@@ -19,8 +19,7 @@ import at.fhooe.mc.ada.features.feature_currency_converter.presentation.Currency
 @Composable
 fun BottomNavGraph(
     navHostController: NavHostController,
-    paddingValues: PaddingValues,
-    viewModel: MainViewModel
+    paddingValues: PaddingValues
 ) {
     NavHost(
         navController = navHostController,
@@ -34,14 +33,13 @@ fun BottomNavGraph(
             )
         }
         composable(route = BottomBarScreen.Home.route) {
-            HomeScreen(BottomBarScreen.Home.title, navHostController)
+            CardsScreen(BottomBarScreen.Home.title, navHostController)
         }
         composable(route = BottomBarScreen.CurrencyConverter.route) {
             CurrencyConverterScreen(
                 BottomBarScreen.CurrencyConverter.title,
                 navHostController,
-                paddingValues,
-                viewModel
+                paddingValues
             )
         }
 

@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,7 @@ import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.componen
 import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.components.CustomOutlinedTextField
 import kotlinx.coroutines.flow.collectLatest
 import at.fhooe.mc.ada.R
+import at.fhooe.mc.ada.core.util.TestTags
 import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.components.CardStyleRows
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -75,7 +77,8 @@ fun AddEditCardScreen(
                 Button(
                     modifier = Modifier
                         .padding(end = 10.dp)
-                        .scale(0.85f),
+                        .scale(0.85f)
+                        .testTag(TestTags.BUTTON_ADD_NEW_CARD),
                     onClick = { viewModel.onEvent(AddEditCardEvent.SaveCard) },
                     content = {
                         var text = ""
@@ -98,7 +101,7 @@ fun AddEditCardScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CustomOutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag(TestTags.TEXTFIELD_CARD_ADD_TITLE),
                 value = cardNameState,
                 label = { Text(text = stringResource(id = R.string.card_name)) },
                 onValueChange = { viewModel.onEvent(AddEditCardEvent.EnteredCardName(it)) },
@@ -204,7 +207,9 @@ fun AddEditCardScreen(
             )
             Spacer(modifier = Modifier.padding(5.dp))
             CardStyleRows(
-                modifier = Modifier.fillMaxWidth().fillMaxHeight(0.50f),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.50f),
                 cardStylesList = at.fhooe.mc.ada.features.feature_card.domain.model.Card.cardStyles,
                 viewModel = viewModel
             )

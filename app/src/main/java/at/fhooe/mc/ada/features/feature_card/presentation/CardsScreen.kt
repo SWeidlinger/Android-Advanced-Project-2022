@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -48,10 +49,11 @@ import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 import at.fhooe.mc.ada.R
+import at.fhooe.mc.ada.core.util.TestTags
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(
+fun CardsScreen(
     title: String,
     navHostController: NavHostController,
     viewModel: CardsViewModel = hiltViewModel()
@@ -88,7 +90,7 @@ fun HomeScreen(
 
     if (scaffoldStateBottomSheet.bottomSheetState.isAnimationRunning && scaffoldStateBottomSheet.bottomSheetState.targetValue == BottomSheetValue.Collapsed) {
         bottomSheetExpanded = false
-    }else if (scaffoldStateBottomSheet.bottomSheetState.isAnimationRunning && scaffoldStateBottomSheet.bottomSheetState.targetValue == BottomSheetValue.Expanded){
+    } else if (scaffoldStateBottomSheet.bottomSheetState.isAnimationRunning && scaffoldStateBottomSheet.bottomSheetState.targetValue == BottomSheetValue.Expanded) {
         bottomSheetExpanded = true
     }
 
@@ -134,10 +136,16 @@ fun HomeScreen(
                 })
         }) {
         androidx.compose.material.Scaffold(floatingActionButton = {
-            FloatingActionButton(onClick = {
-                navHostController.navigate(Screen.AddEditCardScreen.route)
-            }, containerColor = MaterialTheme.colorScheme.primary) {
-                Icon(imageVector = Icons.Default.AddCard, contentDescription = stringResource(id = R.string.add_new_card))
+            FloatingActionButton(modifier = Modifier.testTag(TestTags.FAB_CARD_SCREEN_ADD),
+                onClick = {
+                    navHostController.navigate(Screen.AddEditCardScreen.route)
+                },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AddCard,
+                    contentDescription = stringResource(id = R.string.add_new_card)
+                )
             }
         }, bottomBar = {
             NavigationBar(contentColor = MaterialTheme.colorScheme.secondary) {
@@ -159,92 +167,94 @@ fun HomeScreen(
                         title = { Text(text = title) })
                 }, backgroundColor = MaterialTheme.colorScheme.background,
                     content = {
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(it), verticalArrangement = Arrangement.Top
-                    ) {
-                        OrderSection(
-                            modifier = Modifier.align(Alignment.Start),
-                            cardOrder = viewModelState.cardOrder,
-                            onOrderChange = { cardOrder ->
-                                viewModel.onEvent(CardsEvent.Order(cardOrder))
-                            })
-                    }
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(it),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        if (viewModelState.cards.isNotEmpty()) {
-                            HorizontalPager(
-                                count = numberCards,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .fillMaxHeight(0.325f),
-                                state = pagerState,
-                                contentPadding = PaddingValues(horizontal = 30.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                itemSpacing = (-55).dp
-                            ) { index ->
-                                Column(
+                        Column(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(it), verticalArrangement = Arrangement.Top
+                        ) {
+                            OrderSection(
+                                modifier = Modifier.align(Alignment.Start),
+                                cardOrder = viewModelState.cardOrder,
+                                onOrderChange = { cardOrder ->
+                                    viewModel.onEvent(CardsEvent.Order(cardOrder))
+                                })
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(it),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            if (viewModelState.cards.isNotEmpty()) {
+                                HorizontalPager(
+                                    count = numberCards,
                                     modifier = Modifier
-                                        .fillMaxSize()
-                                        .graphicsLayer {
-                                            scrollAnimation(
-                                                pagerScope = this@HorizontalPager,
-                                                graphicsLayerScope = this,
-                                                scope = index
-                                            )
-                                        }
-                                ) {
-                                    val card = viewModelState.cards[index]
-                                    CardItem(
-                                        card,
-                                        modifier = Modifier.fillMaxSize().padding(10.dp),
-                                        onClick = {
-                                            currentCard = card
-                                            scope.launch {
-                                                scaffoldStateBottomSheet.bottomSheetState.expand()
+                                        .fillMaxWidth()
+                                        .fillMaxHeight(0.325f),
+                                    state = pagerState,
+                                    contentPadding = PaddingValues(horizontal = 30.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    itemSpacing = (-55).dp
+                                ) { index ->
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .graphicsLayer {
+                                                scrollAnimation(
+                                                    pagerScope = this@HorizontalPager,
+                                                    graphicsLayerScope = this,
+                                                    scope = index
+                                                )
                                             }
-                                        })
+                                    ) {
+                                        val card = viewModelState.cards[index]
+                                        CardItem(
+                                            card,
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .padding(10.dp),
+                                            onClick = {
+                                                currentCard = card
+                                                scope.launch {
+                                                    scaffoldStateBottomSheet.bottomSheetState.expand()
+                                                }
+                                            })
+                                    }
+                                }
+                                HorizontalPagerIndicator(
+                                    pagerState = pagerState,
+                                    modifier = Modifier
+                                        .align(Alignment.CenterHorizontally)
+                                        .padding(top = 3.dp, end = 16.dp, start = 16.dp),
+                                    activeColor = MaterialTheme.colorScheme.onBackground,
+                                    inactiveColor = MaterialTheme.colorScheme.onBackground.copy(0.5f)
+                                )
+                            } else {
+                                Box(
+                                    Modifier
+                                        .padding(40.dp)
+                                        .fillMaxWidth()
+                                        .fillMaxSize(0.4f)
+                                        .clickable {
+                                            navHostController.navigate(Screen.AddEditCardScreen.route)
+                                        }
+                                        .background(
+                                            shape = RoundedCornerShape(10.dp),
+                                            color = MaterialTheme.colorScheme.secondary
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = stringResource(id = R.string.add_a_card),
+                                        style = MaterialTheme.typography.headlineLarge,
+                                        modifier = Modifier.fillMaxWidth(),
+                                        textAlign = TextAlign.Center
+                                    )
                                 }
                             }
-                            HorizontalPagerIndicator(
-                                pagerState = pagerState,
-                                modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .padding(top = 3.dp, end = 16.dp, start = 16.dp),
-                                activeColor = MaterialTheme.colorScheme.onBackground,
-                                inactiveColor = MaterialTheme.colorScheme.onBackground.copy(0.5f)
-                            )
-                        } else {
-                            Box(
-                                Modifier
-                                    .padding(40.dp)
-                                    .fillMaxWidth()
-                                    .fillMaxSize(0.4f)
-                                    .clickable {
-                                        navHostController.navigate(Screen.AddEditCardScreen.route)
-                                    }
-                                    .background(
-                                        shape = RoundedCornerShape(10.dp),
-                                        color = MaterialTheme.colorScheme.secondary
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.add_a_card),
-                                    style = MaterialTheme.typography.headlineLarge,
-                                    modifier = Modifier.fillMaxWidth(),
-                                    textAlign = TextAlign.Center
-                                )
-                            }
                         }
-                    }
-                })
+                    })
                 val alphaBackground =
                     if (bottomSheetExpanded) 0.75f else 0f
                 Box(
