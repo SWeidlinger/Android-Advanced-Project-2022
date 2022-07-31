@@ -24,11 +24,9 @@ import at.fhooe.mc.ada.features.feature_card.domain.util.CardNumberMask
 import at.fhooe.mc.ada.features.feature_card.domain.util.ExpirationDateMask
 import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.components.CardStyleCard
 import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.components.CustomOutlinedTextField
-import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
-import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.flow.collectLatest
 import at.fhooe.mc.ada.R
+import at.fhooe.mc.ada.features.feature_card.presentation.add_edit_card.components.CardStyleRows
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -68,7 +66,10 @@ fun AddEditCardScreen(
                 )
             }, navigationIcon = {
                 IconButton(onClick = { navHostController.navigateUp() }) {
-                    Icon(imageVector = Icons.Default.Close, contentDescription = stringResource(id = R.string.back))
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(id = R.string.back)
+                    )
                 }
             }, actions = {
                 Button(
@@ -175,13 +176,15 @@ fun AddEditCardScreen(
                             Icon(
                                 imageVector = Icons.Default.Check,
                                 contentDescription = "",
-                                modifier = Modifier.padding(3.dp)
+                                modifier = Modifier.padding(3.dp),
+                                tint = MaterialTheme.colorScheme.onBackground
                             )
                         } else {
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = "",
-                                modifier = Modifier.padding(3.dp)
+                                modifier = Modifier.padding(3.dp),
+                                tint = MaterialTheme.colorScheme.onBackground
                             )
                         }
                     },
@@ -200,23 +203,11 @@ fun AddEditCardScreen(
                 fontSize = 18.sp
             )
             Spacer(modifier = Modifier.padding(5.dp))
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                mainAxisAlignment = FlowMainAxisAlignment.SpaceBetween,
-                mainAxisSpacing = 10.dp,
-                crossAxisAlignment = FlowCrossAxisAlignment.Center,
-                crossAxisSpacing = 10.dp
-            ) {
-                at.fhooe.mc.ada.features.feature_card.domain.model.Card.cardStyles.forEach { color ->
-                    val colorInt = color.toArgb()
-                    CardStyleCard(modifier = Modifier.size(80.dp, 50.dp),
-                        color = color,
-                        checked = viewModel.cardStyle.value == colorInt,
-                        onCardClick = {
-                            viewModel.onEvent(AddEditCardEvent.ChangeCardStyle(colorInt))
-                        })
-                }
-            }
+            CardStyleRows(
+                modifier = Modifier.fillMaxWidth().fillMaxHeight(0.50f),
+                cardStylesList = at.fhooe.mc.ada.features.feature_card.domain.model.Card.cardStyles,
+                viewModel = viewModel
+            )
         }
     }
 }

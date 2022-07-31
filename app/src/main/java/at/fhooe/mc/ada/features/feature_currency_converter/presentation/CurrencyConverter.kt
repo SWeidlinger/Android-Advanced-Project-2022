@@ -209,7 +209,9 @@ fun CurrencyConverterScreen(
             content = {
                 Column(
                     Modifier
-                        .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Surface(
                         modifier = Modifier

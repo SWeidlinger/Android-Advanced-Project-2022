@@ -23,20 +23,21 @@ fun CardStyleCard(modifier: Modifier, color: Color, checked: Boolean, onCardClic
         modifier = modifier,
         colors = CardDefaults.cardColors(color),
         onClick = onCardClick,
-        border = if (checked) BorderStroke(2.dp, color = Color.White) else null,
+        border = if (checked) BorderStroke(2.dp, color = MaterialTheme.colorScheme.onBackground) else null,
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
-        if (checked) {
+
             Box(
                 modifier = Modifier
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
+                if (checked) {
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = "Checked Card",
                     modifier = Modifier.padding(5.dp),
-                    tint = Color.White
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             }
         }

@@ -23,3 +23,11 @@ val NegativeRed = Color(0xFFFF4547)
 
 val NavigationIndicatorLight = Color(0xFFC3D1DA)
 val NavigationIndicatorDark = Color(0xFF124861)
+
+//Card Colors
+val CardColorGray = Color(0xFF868A8A)
+val CardColorOrange = Color(0xFFFF9919)
+val CardColorPurple = Color(0xFFA935F9)
+val CardColorYellow = Color(0xFFF5E71C)
+val CardColorGreen = Color(0xFF2C9744)
+val CardColorBlue = Color(0xFF7777fd)

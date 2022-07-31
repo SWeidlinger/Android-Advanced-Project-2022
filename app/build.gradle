@@ -103,6 +103,9 @@ dependencies {
     //Biometrics
     implementation 'androidx.biometric:biometric:1.2.0-alpha04'
 
-    //Flowrow
-    implementation 'com.google.accompanist:accompanist-flowlayout:0.24.13-rc'
+    //Card shimmer
+    implementation 'com.valentinilk.shimmer:compose-shimmer:1.0.0'
+
+    //Constraint layout
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 }

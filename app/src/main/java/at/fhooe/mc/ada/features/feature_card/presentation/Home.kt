@@ -75,7 +75,8 @@ fun HomeScreen(
                 expirationDate = "",
                 isLocked = false,
                 cardStyle = 0,
-                dateAdded = 0L
+                dateAdded = 0L,
+                cardChipColor = R.drawable.credit_card_chip_gold1
             )
         )
     }
@@ -154,7 +155,7 @@ fun HomeScreen(
             backgroundColor = MaterialTheme.colorScheme.background,
             content = {
                 androidx.compose.material.Scaffold(topBar = {
-                    SmallTopAppBar(
+                    CenterAlignedTopAppBar(
                         title = { Text(text = title) })
                 }, backgroundColor = MaterialTheme.colorScheme.background,
                     content = {
@@ -182,7 +183,7 @@ fun HomeScreen(
                                 count = numberCards,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .fillMaxHeight(0.4f),
+                                    .fillMaxHeight(0.325f),
                                 state = pagerState,
                                 contentPadding = PaddingValues(horizontal = 30.dp),
                                 verticalAlignment = Alignment.CenterVertically,
@@ -202,7 +203,7 @@ fun HomeScreen(
                                     val card = viewModelState.cards[index]
                                     CardItem(
                                         card,
-                                        modifier = Modifier.fillMaxSize(),
+                                        modifier = Modifier.fillMaxSize().padding(10.dp),
                                         onClick = {
                                             currentCard = card
                                             scope.launch {
@@ -215,7 +216,7 @@ fun HomeScreen(
                                 pagerState = pagerState,
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
-                                    .padding(end = 16.dp, start = 16.dp),
+                                    .padding(top = 3.dp, end = 16.dp, start = 16.dp),
                                 activeColor = MaterialTheme.colorScheme.onBackground,
                                 inactiveColor = MaterialTheme.colorScheme.onBackground.copy(0.5f)
                             )

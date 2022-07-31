@@ -31,7 +31,7 @@
     <string name="ccv">CCV</string>
     <string name="date_mm_yy">MM/YY</string>
     <string name="encrypt_card">Encrypt card</string>
-    <string name="card_style">Card style</string>
+    <string name="card_style">Card color</string>
 
 <!--    Feature Card-->
     <string name="delete_card">Delete card</string>

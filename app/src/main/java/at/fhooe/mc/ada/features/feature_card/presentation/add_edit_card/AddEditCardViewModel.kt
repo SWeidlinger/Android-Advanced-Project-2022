@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class AddEditCardViewModel @Inject constructor(
@@ -44,6 +45,9 @@ class AddEditCardViewModel @Inject constructor(
     private val _cardStyle = mutableStateOf(Card.cardStyles[0].toArgb())
     val cardStyle: State<Int> = _cardStyle
 
+    private val _cardChipColor = mutableStateOf(R.drawable.credit_card_chip_gold1)
+    val cardChipColor: State<Int> = _cardChipColor
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -63,6 +67,7 @@ class AddEditCardViewModel @Inject constructor(
                         _cardHolderName.value = card.cardHolderName
                         _cardSecurityNumber.value = card.securityNumber
                         _cardExpirationDate.value = card.expirationDate
+                        _cardChipColor.value = card.cardChipColor
                     }
                 }
             }
@@ -105,7 +110,8 @@ class AddEditCardViewModel @Inject constructor(
                                 id = currentCardId,
                                 cardNumber = cardNumber.value,
                                 securityNumber = cardSecurityNumber.value,
-                                expirationDate = cardExpirationDate.value
+                                expirationDate = cardExpirationDate.value,
+                                cardChipColor = Random.nextInt(5)
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveCard)
