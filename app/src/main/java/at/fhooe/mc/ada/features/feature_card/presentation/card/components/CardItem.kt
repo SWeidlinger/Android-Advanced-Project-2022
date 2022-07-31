@@ -67,7 +67,6 @@ fun CardItem(card: Card, modifier: Modifier = Modifier, onClick: () -> Unit) {
                     .padding(top = 10.dp)
                     .fillMaxWidth()
             )
-            Spacer(modifier = Modifier.padding(5.dp))
             if (card.isLocked) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -76,7 +75,7 @@ fun CardItem(card: Card, modifier: Modifier = Modifier, onClick: () -> Unit) {
                     Icon(
                         imageVector = Icons.Default.Lock,
                         contentDescription = "Locked",
-                        modifier = Modifier.fillMaxSize(0.5f)
+                        modifier = Modifier.fillMaxSize().padding(bottom = 5.dp)
                     )
                 }
             } else {

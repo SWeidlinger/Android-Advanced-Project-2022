@@ -6,6 +6,10 @@
 package at.fhooe.mc.ada.features.feature_card.presentation
 
 import android.annotation.SuppressLint
+import android.util.Log
+import android.widget.Toast
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import at.fhooe.mc.ada.core.presentation.Screen
@@ -49,7 +54,10 @@ import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 import at.fhooe.mc.ada.R
+import at.fhooe.mc.ada.core.util.CustomBiometricPrompt
 import at.fhooe.mc.ada.core.util.TestTags
+import at.fhooe.mc.ada.features.MainActivity
+import kotlinx.coroutines.CoroutineScope
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -58,7 +66,7 @@ fun CardsScreen(
     navHostController: NavHostController,
     viewModel: CardsViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
+    val mainActivity = LocalContext.current as MainActivity
 
     val viewModelState = viewModel.state.value
 
@@ -136,7 +144,8 @@ fun CardsScreen(
                 })
         }) {
         androidx.compose.material.Scaffold(floatingActionButton = {
-            FloatingActionButton(modifier = Modifier.testTag(TestTags.FAB_CARD_SCREEN_ADD),
+            FloatingActionButton(
+                modifier = Modifier.testTag(TestTags.FAB_CARD_SCREEN_ADD),
                 onClick = {
                     navHostController.navigate(Screen.AddEditCardScreen.route)
                 },
@@ -173,7 +182,7 @@ fun CardsScreen(
                                 .padding(it), verticalArrangement = Arrangement.Top
                         ) {
                             OrderSection(
-                                modifier = Modifier.align(Alignment.Start),
+                                modifier = Modifier.align(Alignment.Start).padding(horizontal = 5.dp),
                                 cardOrder = viewModelState.cardOrder,
                                 onOrderChange = { cardOrder ->
                                     viewModel.onEvent(CardsEvent.Order(cardOrder))
@@ -216,8 +225,17 @@ fun CardsScreen(
                                                 .padding(10.dp),
                                             onClick = {
                                                 currentCard = card
-                                                scope.launch {
-                                                    scaffoldStateBottomSheet.bottomSheetState.expand()
+                                                if (card.isLocked) {
+                                                    CustomBiometricPrompt.showBiometricPrompt(
+                                                        mainActivity,
+                                                        scaffoldStateBottomSheet,
+                                                        scaffoldState,
+                                                        scope
+                                                    )
+                                                } else {
+                                                    scope.launch {
+                                                        scaffoldStateBottomSheet.bottomSheetState.expand()
+                                                    }
                                                 }
                                             })
                                     }

@@ -119,9 +119,7 @@ fun CurrencyConverterScreen(
                 is MainViewModel.CurrencyEvent.Failure -> {
                     resultValue = event.errorText
                 }
-                is MainViewModel.CurrencyEvent.Loading -> {
-                    //TODO
-                }
+                is MainViewModel.CurrencyEvent.Loading -> {}
                 else -> Unit
             }
         }
@@ -310,7 +308,6 @@ fun CurrencyConverterScreen(
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.Center
                                     ) {
-//                                        if (resultValue != "-") {
                                         Text(
                                             text = "${stringResource(R.string.converted_amount)} ($fromCurrencyCode - $toCurrencyCode)",
                                             textAlign = TextAlign.Center,
@@ -330,7 +327,6 @@ fun CurrencyConverterScreen(
                                                 overflow = TextOverflow.Ellipsis
                                             )
                                         }
-//                                        }
                                     }
                                 }
                             }

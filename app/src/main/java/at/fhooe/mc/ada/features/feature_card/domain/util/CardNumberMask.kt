@@ -5,6 +5,7 @@ import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 
+//Class for displaying spaces between every 4 number on cardNumber
 class CardNumberMask(private val separator: String = " ") : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
         return makeCardNumberFilter(text, separator)

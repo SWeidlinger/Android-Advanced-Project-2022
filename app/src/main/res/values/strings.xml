@@ -30,7 +30,7 @@
     <string name="card_number">Card number</string>
     <string name="ccv">CCV</string>
     <string name="date_mm_yy">MM/YY</string>
-    <string name="encrypt_card">Encrypt card</string>
+    <string name="encrypt_card">Lock card</string>
     <string name="card_style">Card color</string>
 
 <!--    Feature Card-->
@@ -51,6 +51,11 @@
     <string name="to">to</string>
     <string name="converted_amount">Converted amount</string>
 
+<!--    Biometric authentication-->
+    <string name="biometric_prompt_title">Your Card is locked</string>
+    <string name="biometric_prompt_description">To unlock your card use either biometric data or a pin</string>
+    <string name="biometric_prompt_error">Biometric data or screen lock must be present to use lock card feature!\n\nUnlocking card!</string>
+    <string name="biometric_prompt_failed">Authentication failed</string>
 <!--    Common-->
     <string name="undo">Undo</string>
     <string name="date_added">Date added</string>

@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 
+//Object for holding the MultiFabStates and expanding/collapsing
 object MultiFab {
     var multiFabState = mutableStateOf(State.COLLAPSED)
 
