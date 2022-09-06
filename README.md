@@ -1,6 +1,6 @@
 # Digital wallet
 
-This application was developed as a final project for the course Android Advanced. It is fully built in Jetpack Compose using MVVM. The app is able to save card information (lock important card data with biometrics), convert different currencies and to keep track of a budget.
+This application was developed for a university course (Android Advanced). It is fully built in Jetpack Compose using MVVM. The app is able to save card information (lock important card data with biometrics), convert different currencies and can keep track of a budget.
 
 ## Technologies/Frameworks:
 - Jetpack Compose
